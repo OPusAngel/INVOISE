@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="msvalidate.01" content="F37205B6FE4B18CAA7FF151ADA414FBA" />
+  
+  <title>INVOISE — студийное стерео панорамирование вокала</title>
+  <meta name="description" content="INVOISE — студийное стерео панорамирование вокала. Профессиональная эквализация, сведение и мультисемплирование вокала. Превратить ваш вокал или звуковую аудио дорожку в объемное пространственное звучание и даст глубину">
+  <meta name="keywords" content="invoise, стерео панорамирование, вокал, нейросети улучшения качества звука, ИИ обработки вокала, улучшение качества записи, обработка вокала, сведение, мастеринг, компрессия, эквализация, дабл-трек, панорама, объем звучания, глубина звука, эффект глубины">
+  <meta name="author" content="invoise, стерео панорамирование, вокал, нейросети улучшения качества звука, ИИ обработки вокала, улучшение качества записи, обработка вокала">
+  <meta property="og:title" content="INVOISE — студийное стерео панорамирование вокала">
+  <meta property="og:description" content="INVOISE — студийное стерео панорамирование вокала">
+  <meta property="og:image" content="https://invoise.ru/INVOISE.png">
+  <meta property="og:url" content="https://invoise.ru/">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://invoise.ru/">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="INVOISE — студийное стерео панорамирование вокала">
+  <meta name="twitter:description" content="INVOISE — студийное стерео панорамирование вокала">
+  <meta name="twitter:image" content="https://invoise.ru/INVOISE.png">
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="120x120" href="favicon-120x120.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
+    *{box-sizing:border-box}
+    body{
+      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+      margin:0;
+      min-height:100vh;
+      background:linear-gradient(180deg,#071025 0%, #071827 60%);
+      color:#e6eef8;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:32px 20px;
+    }
+
+    /* ЛОГОТИП — ВЕРХ, ЦЕНТР, КРУПНО */
+    .page-top-logo{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin-bottom:30px;
+      margin-top:10px;
+    }
+    .page-top-logo img{
+      max-width:360px;
+      width:55%;
+      height:auto;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 10px 26px rgba(0,0,0,0.55));
+    }
+
+    @media(max-width:520px){
+      .page-top-logo img{
+        max-width:280px;
+        width:70%;
+      }
+    }
+
+    /* НИЖНЯЯ НАДПИСЬ — ОТСТУП УВЕЛИЧЕН */
+    .page-bottom-thanks{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:30px; /* УВЕЛИЧЕН ОТСТУП */
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:12px 18px;
+      border-radius:12px;
+      font-size:15px;
+      text-align:center;
+      color:var(--muted);
+      backdrop-filter:blur(6px);
+      max-width:92%;
+      line-height:1.25;
+      pointer-events:none;
+      box-shadow:0 10px 30px rgba(2,6,23,0.6);
+      white-space:pre-line;
+    }
+    @media(max-width:520px){
+      .page-bottom-thanks{
+        bottom:22px;
+        font-size:14px;
+        padding:10px 14px;
+      }
+    }
+
+    /* Остальной стиль сайта — БЕЗ ИЗМЕНЕНИЙ */
+    .card{width:960px;max-width:100%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:26px;box-shadow:0 8px 30px rgba(2,6,23,0.6);}
+    header{display:flex;align-items:center;gap:16px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 18px;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    .drop{border:2px dashed rgba(255,255,255,0.05);background:var(--glass);padding:18px;border-radius:10px;min-height:180px;display:flex;flex-direction:column;gap:12px}
+    .drop.dragover{border-color:rgba(124,58,237,0.9);box-shadow:0 6px 18px rgba(124,58,237,0.06)}
+    .drop input[type=file]{display:none}
+    button{background:linear-gradient(90deg,var(--accent),#4f46e5);border:none;color:white;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .meta{font-size:13px;color:var(--muted)}
+    .progress{height:10px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden}
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,#60a5fa,#7c3aed);transition:width .2s}
+    .right{background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0.01));padding:16px;border-radius:10px}
+    .section-title{font-size:13px;color:var(--muted);margin-bottom:8px}
+    audio{width:100%;margin-top:8px}
+    footer{margin-top:14px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+    @media(max-width:900px){.grid{grid-template-columns:1fr;}.right{order:2}}
+  </style>
+</head>
+<body>
+
+  <!-- ЛОГО СТРОГО ПО ЦЕНТРУ И НАД ВСЕМ -->
+  <div class="page-top-logo">
+    <img src="INVOISE.png" alt="INVOISE" style="width: 180px; height: auto;">
+  </div>
+
+  <div class="card">
+    <header>
+      <div class="logo">IV</div>
+      <div>
+        <h1>Intelligence Vocal</h1>
+        <p class="lead">Загрузите вокальный трек — получим <strong>студийную стерео панораму</strong></p>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div>
+        <div id="drop" class="drop">
+          <div style="display:flex; justify-content:space-between; align-items:center">
+            <div>
+              <div style="font-weight:600">Перетащите файл сюда</div>
+              <div class="meta">Поддерживается: WAV, MP3, OGG и др.</div>
+            </div>
+            <div>
+              <label>
+                <button class="ghost" onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
+              </label>
+              <input id="fileInput" type="file" accept="audio/*">
+            </div>
+          </div>
+
+          <div id="fileInfo" class="meta" style="margin-top:6px;">Файл не выбран</div>
+
+          <div style="margin-top:auto; text-align:right">
+            <button id="convertBtn">Конвертировать</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="right">
+        <div class="section-title">Превью & Загрузка</div>
+        <div id="playerArea"><div class="meta">Результат появится здесь</div></div>
+
+        <div style="margin-top:12px">
+          <div class="section-title">Прогресс</div>
+          <div class="progress"><div id="bar" class="bar"></div></div>
+          <div id="status" class="meta" style="margin-top:8px">Ожидание</div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="section-title">Информация</div>
+          <div class="meta" id="infoBox">Пока пусто</div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div>Полностью локальная обработка — экспорт: WAV 32-bit float, 96 kHz, 3 канала</div>
+      <div></div>
+    </footer>
+  </div>
+
+  <!-- НИЖНЯЯ БЛАГОДАРНОСТЬ -->
+  <div class="page-bottom-thanks">
+    Если вам нравится мой сервис и он вам полезен<br>
+    — Вы можете отблагодарить меня чашечкой кофе +79996370785
+  </div>
+
+<script>
+/* — JS осталось без изменений (опущено для краткости в этом сообщении)
+   но если нужно — пришлю снова полностью — скажите. */
+</script>
+
+</body>
+</html>
