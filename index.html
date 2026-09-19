@@ -184,10 +184,399 @@
     — Вы можете отблагодарить меня чашечкой кофе +79996370785
   </div>
 
-<script>
-/* — JS осталось без изменений (опущено для краткости в этом сообщении)
-   но если нужно — пришлю снова полностью — скажите. */
-</script>
+  <script>
+// === INVOISE — Профессиональная обработка вокала ===
 
+const dropZone = document.getElementById('drop');
+const fileInput = document.getElementById('fileInput');
+const fileInfo = document.getElementById('fileInfo');
+const convertBtn = document.getElementById('convertBtn');
+const playerArea = document.getElementById('playerArea');
+const bar = document.getElementById('bar');
+const status = document.getElementById('status');
+const infoBox = document.getElementById('infoBox');
+
+let audioContext = null;
+let originalBuffer = null;
+let fileName = '';
+
+// Drag & Drop обработчики
+dropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.classList.add('dragover');
+});
+
+dropZone.addEventListener('dragleave', () => {
+  dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  if (files.length > 0 && files[0].type.startsWith('audio/')) {
+    loadAudioFile(files[0]);
+  }
+});
+
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files.length > 0) {
+    loadAudioFile(e.target.files[0]);
+  }
+});
+
+async function loadAudioFile(file) {
+  fileName = file.name;
+  fileInfo.textContent = `${file.name} • ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+  status.textContent = 'Загрузка файла...';
+  bar.style.width = '20%';
+  
+  try {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 96000 });
+    }
+    
+    const arrayBuffer = await file.arrayBuffer();
+    originalBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    
+    bar.style.width = '100%';
+    status.textContent = 'Файл готов к обработке';
+    infoBox.innerHTML = `
+      <div>Длительность: ${(originalBuffer.duration).toFixed(2)} сек</div>
+      <div>Каналов: ${originalBuffer.numberOfChannels}</div>
+      <div>Частота: ${originalBuffer.sampleRate} Hz</div>
+    `;
+    
+    // Показать оригинальный плеер
+    showOriginalPlayer();
+  } catch (err) {
+    status.textContent = 'Ошибка загрузки: ' + err.message;
+    bar.style.width = '0%';
+  }
+}
+
+function showOriginalPlayer() {
+  playerArea.innerHTML = `
+    <div class="meta" style="margin-bottom:8px;">Оригинал:</div>
+    <audio id="originalAudio" controls></audio>
+  `;
+  const audioEl = document.getElementById('originalAudio');
+  audioEl.src = URL.createObjectURL(new Blob([originalBuffer.getChannelData(0).buffer], { type: 'audio/wav' }));
+}
+
+convertBtn.addEventListener('click', async () => {
+  if (!originalBuffer) {
+    alert('Сначала загрузите аудиофайл!');
+    return;
+  }
+  
+  try {
+    status.textContent = 'Обработка вокала...';
+    bar.style.width = '30%';
+    convertBtn.disabled = true;
+    
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Создаем обработанный буфер
+    const processedBuffer = await processVocal(originalBuffer);
+    
+    bar.style.width = '100%';
+    status.textContent = 'Готово!';
+    infoBox.innerHTML += `<div style="margin-top:8px;color:#7c3aed">✓ Обработка завершена</div>`;
+    
+    // Показываем результат
+    showProcessedPlayer(processedBuffer);
+    
+    convertBtn.disabled = false;
+  } catch (err) {
+    status.textContent = 'Ошибка: ' + err.message;
+    convertBtn.disabled = false;
+    bar.style.width = '0%';
+  }
+});
+
+async function processVocal(inputBuffer) {
+  const sampleRate = 96000;
+  const numChannels = 2; // Стерео
+  const length = inputBuffer.length * (sampleRate / inputBuffer.sampleRate);
+  
+  const outputBuffer = audioContext.createBuffer(numChannels, length, sampleRate);
+  
+  // Получаем данные из оригинального буфера
+  const inputData = [];
+  for (let ch = 0; ch < inputBuffer.numberOfChannels; ch++) {
+    inputData.push(inputBuffer.getChannelData(ch));
+  }
+  
+  // Интерполяция до 96kHz если нужно
+  const ratio = sampleRate / inputBuffer.sampleRate;
+  const resampledData = [];
+  for (let ch = 0; ch < numChannels; ch++) {
+    const channelData = new Float32Array(length);
+    const srcChannel = inputData[Math.min(ch, inputData.length - 1)];
+    
+    for (let i = 0; i < length; i++) {
+      const srcIndex = i / ratio;
+      const index = Math.floor(srcIndex);
+      const frac = srcIndex - index;
+      
+      if (index + 1 < srcChannel.length) {
+        channelData[i] = srcChannel[index] * (1 - frac) + srcChannel[index + 1] * frac;
+      } else {
+        channelData[i] = srcChannel[Math.min(index, srcChannel.length - 1)] || 0;
+      }
+    }
+    resampledData.push(channelData);
+  }
+  
+  // Применяем обработку к каждому каналу
+  for (let ch = 0; ch < numChannels; ch++) {
+    let channelData = resampledData[ch];
+    
+    // 1. Эквализация (High-pass фильтр для очистки низких частот)
+    channelData = highPassFilter(channelData, sampleRate, 80);
+    
+    // 2. Добавляем теплоты (легкое усиление низких средних)
+    channelData = applyEQ(channelData, sampleRate, 'lowShelf', 200, 3);
+    
+    // 3. Добавляем присутствия (воздушность на высоких)
+    channelData = applyEQ(channelData, sampleRate, 'highShelf', 8000, 4);
+    
+    // 4. Компрессия
+    channelData = compress(channelData, 0.3, 0.005, 0.1);
+    
+    // 5. Сатуратор для теплоты
+    channelData = saturate(channelData, 0.15);
+    
+    // 6. Стерео расширение (разница между каналами)
+    if (ch === 0) {
+      channelData = stereoWiden(channelData, resampledData[1], -0.15);
+    } else {
+      channelData = stereoWiden(channelData, resampledData[0], 0.15);
+    }
+    
+    // 7. Реверберация (простая convolution-like)
+    channelData = addReverb(channelData, sampleRate, 0.25);
+    
+    // 8. Дилей для объема
+    channelData = addDelay(channelData, sampleRate, 0.03, 0.15);
+    
+    outputBuffer.copyToChannel(channelData, ch);
+  }
+  
+  return outputBuffer;
+}
+
+// High-pass фильтр
+function highPassFilter(data, sampleRate, cutoffFreq) {
+  const rc = 1.0 / (cutoffFreq * 2 * Math.PI);
+  const dt = 1.0 / sampleRate;
+  const alpha = rc / (rc + dt);
+  
+  const output = new Float32Array(data.length);
+  output[0] = data[0];
+  
+  for (let i = 1; i < data.length; i++) {
+    output[i] = alpha * (output[i - 1] + data[i] - data[i - 1]);
+  }
+  
+  return output;
+}
+
+// Простой EQ
+function applyEQ(data, sampleRate, type, freq, gain) {
+  const output = new Float32Array(data.length);
+  const normalizedFreq = freq / sampleRate;
+  
+  if (type === 'lowShelf') {
+    const b0 = 1 + Math.sqrt(2) * Math.sqrt(gain);
+    const b1 = -2 * Math.sqrt(gain);
+    const a1 = -Math.sqrt(gain);
+    
+    let y1 = 0, x1 = 0;
+    for (let i = 0; i < data.length; i++) {
+      output[i] = b0 * data[i] + b1 * x1 - a1 * y1;
+      x1 = data[i];
+      y1 = output[i];
+    }
+  } else if (type === 'highShelf') {
+    const b0 = 1 + Math.sqrt(2) * Math.sqrt(gain);
+    const b1 = -2 * Math.sqrt(gain);
+    const a1 = -Math.sqrt(gain);
+    
+    let y1 = 0, x1 = 0;
+    for (let i = 0; i < data.length; i++) {
+      output[i] = b0 * data[i] + b1 * x1 - a1 * y1;
+      x1 = data[i];
+      y1 = output[i];
+    }
+  } else {
+    for (let i = 0; i < data.length; i++) {
+      output[i] = data[i];
+    }
+  }
+  
+  return output;
+}
+
+// Компрессор
+function compress(data, threshold, attack, release) {
+  const output = new Float32Array(data.length);
+  let envelope = 0;
+  
+  for (let i = 0; i < data.length; i++) {
+    const absVal = Math.abs(data[i]);
+    const db = 20 * Math.log10(absVal + 0.0001);
+    
+    if (db > threshold) {
+      envelope = Math.max(envelope - release, db - threshold);
+    } else {
+      envelope = Math.min(envelope + attack, 0);
+    }
+    
+    const gainReduction = Math.pow(10, -envelope / 20);
+    output[i] = data[i] * gainReduction;
+  }
+  
+  return output;
+}
+
+// Сатурация (теплота)
+function saturate(data, amount) {
+  const output = new Float32Array(data.length);
+  for (let i = 0; i < data.length; i++) {
+    const x = data[i] * (1 + amount);
+    output[i] = Math.tanh(x);
+  }
+  return output;
+}
+
+// Стерео расширение
+function stereoWiden(channel, otherChannel, pan) {
+  const output = new Float32Array(channel.length);
+  for (let i = 0; i < channel.length; i++) {
+    output[i] = channel[i] * (1 - Math.abs(pan)) + otherChannel[i] * pan;
+  }
+  return output;
+}
+
+// Реверберация (простая)
+function addReverb(data, sampleRate, wetAmount) {
+  const output = new Float32Array(data.length);
+  const delayTime = Math.floor(sampleRate * 0.05);
+  const buffer = new Float32Array(delayTime + 100);
+  let writePos = 0;
+  
+  for (let i = 0; i < data.length; i++) {
+    const readPos = (writePos - delayTime + buffer.length) % buffer.length;
+    const delayed = buffer[readPos] * 0.3;
+    buffer[writePos] = data[i] + delayed * 0.5;
+    output[i] = data[i] * (1 - wetAmount) + delayed * wetAmount;
+    writePos = (writePos + 1) % buffer.length;
+  }
+  
+  return output;
+}
+
+// Дилей
+function addDelay(data, sampleRate, delaySec, feedback) {
+  const output = new Float32Array(data.length);
+  const delaySamples = Math.floor(sampleRate * delaySec);
+  const buffer = new Float32Array(delaySamples + 1000);
+  let writePos = 0;
+  
+  for (let i = 0; i < data.length; i++) {
+    const readPos = (writePos - delaySamples + buffer.length) % buffer.length;
+    const delayed = buffer[readPos];
+    buffer[writePos] = data[i] + delayed * feedback;
+    output[i] = data[i] + delayed * 0.3;
+    writePos = (writePos + 1) % buffer.length;
+  }
+  
+  return output;
+}
+
+function showProcessedPlayer(buffer) {
+  const wavBlob = bufferToWave(buffer, buffer.length);
+  const url = URL.createObjectURL(wavBlob);
+  
+  playerArea.innerHTML = `
+    <div class="meta" style="margin-bottom:8px;color:#7c3aed;">Обработано:</div>
+    <audio id="processedAudio" controls src="${url}"></audio>
+    <div style="margin-top:12px">
+      <a href="${url}" download="invoise_${fileName.replace(/\.[^/.]+$/, '')}_processed.wav">
+        <button style="width:100%">Скачать результат (WAV 96kHz)</button>
+      </a>
+    </div>
+  `;
+}
+
+function bufferToWave(abuffer, len) {
+  const numOfChan = abuffer.numberOfChannels;
+  const length = len * numOfChan * 2 + 44;
+  const buffer = new ArrayBuffer(length);
+  const view = new DataView(buffer);
+  const channels = [];
+  let i;
+  let sample;
+  let offset = 0;
+  let pos = 0;
+
+  // RIFF identifier
+  setUint32(0x52494646);
+  // file length
+  setUint32(length - 8);
+  // RIFF type
+  setUint32(0x57415645);
+
+  // format chunk identifier
+  setUint32(0x666d7420);
+  // format chunk length
+  setUint32(16);
+  // sample format (raw)
+  setUint16(3);
+  // channel count
+  setUint16(numOfChan);
+  // sample rate
+  setUint32(abuffer.sampleRate);
+  // byte rate (sample rate * block align)
+  setUint32(abuffer.sampleRate * 4 * numOfChan);
+  // block align (channel count * bytes per sample)
+  setUint16(numOfChan * 4);
+  // bits per sample
+  setUint16(32);
+
+  // data chunk identifier
+  setUint32(0x64617461);
+  // data chunk length
+  setUint32(len * numOfChan * 4);
+
+  for (i = 0; i < abuffer.numberOfChannels; i++) {
+    channels.push(abuffer.getChannelData(i));
+  }
+
+  while (pos < len) {
+    for (i = 0; i < numOfChan; i++) {
+      sample = Math.max(-1, Math.min(1, channels[i][pos]));
+      sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
+      view.setInt16(44 + offset, sample, true);
+      offset += 2;
+    }
+    pos++;
+  }
+
+  return new Blob([view], { type: 'audio/wav' });
+
+  function setUint16(data) {
+    view.setUint16(offset, data, true);
+    offset += 2;
+  }
+
+  function setUint32(data) {
+    view.setUint32(offset, data, true);
+    offset += 4;
+  }
+}
+  </script>
 </body>
 </html>
