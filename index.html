@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="msvalidate.01" content="F37205B6FE4B18CAA7FF151ADA414FBA" />
   
-  <title>INVOISE — студийное стерео панорамирование вокала</title>
-  <meta name="description" content="INVOISE — студийное стерео панорамирование вокала. Профессиональная эквализация, сведение и мультисемплирование вокала. Превратить ваш вокал или звуковую аудио дорожку в объемное пространственное звучание и даст глубину">
-  <meta name="keywords" content="invoise, стерео панорамирование, вокал, нейросети улучшения качества звука, ИИ обработки вокала, улучшение качества записи, обработка вокала, сведение, мастеринг, компрессия, эквализация, дабл-трек, панорама, объем звучания, глубина звука, эффект глубины">
-  <meta name="author" content="invoise, стерео панорамирование, вокал, нейросети улучшения качества звука, ИИ обработки вокала, улучшение качества записи, обработка вокала">
-  <meta property="og:title" content="INVOISE — студийное стерео панорамирование вокала">
-  <meta property="og:description" content="INVOISE — студийное стерео панорамирование вокала">
+  <title>INVOISE — Профессиональная обработка вокала</title>
+  <meta name="description" content="INVOISE — студийная обработка вокала онлайн. Объемное звучание, профессиональная эквализация, компрессия и пространственная обработка.">
+  <meta name="keywords" content="invoise, обработка вокала, студия онлайн, эквализация, компрессия, реверберация, стерео панорамирование">
+  <meta name="author" content="INVOISE">
+  <meta property="og:title" content="INVOISE — Профессиональная обработка вокала">
+  <meta property="og:description" content="Преврати свой вокал в студийное звучание за секунды">
   <meta property="og:image" content="https://invoise.ru/INVOISE.png">
   <meta property="og:url" content="https://invoise.ru/">
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://invoise.ru/">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="INVOISE — студийное стерео панорамирование вокала">
-  <meta name="twitter:description" content="INVOISE — студийное стерео панорамирование вокала">
+  <meta name="twitter:title" content="INVOISE — Профессиональная обработка вокала">
+  <meta name="twitter:description" content="Преврати свой вокал в студийное звучание за секунды">
   <meta name="twitter:image" content="https://invoise.ru/INVOISE.png">
   
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -27,556 +27,994 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
-    *{box-sizing:border-box}
-    body{
-      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;
-      margin:0;
-      min-height:100vh;
-      background:linear-gradient(180deg,#071025 0%, #071827 60%);
-      color:#e6eef8;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      padding:32px 20px;
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.8);
+      --accent-primary: #8b5cf6;
+      --accent-secondary: #6366f1;
+      --accent-glow: rgba(139, 92, 246, 0.4);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: rgba(148, 163, 184, 0.1);
+      --success: #10b981;
+      --glass: rgba(255, 255, 255, 0.02);
     }
 
-    /* ЛОГОТИП — ВЕРХ, ЦЕНТР, КРУПНО */
-    .page-top-logo{
-      width:100%;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      margin-bottom:30px;
-      margin-top:10px;
-    }
-    .page-top-logo img{
-      max-width:360px;
-      width:55%;
-      height:auto;
-      object-fit:contain;
-      display:block;
-      filter:drop-shadow(0 10px 26px rgba(0,0,0,0.55));
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    @media(max-width:520px){
-      .page-top-logo img{
-        max-width:280px;
-        width:70%;
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(ellipse at top, #1a1f3a 0%, var(--bg-primary) 60%);
+      min-height: 100vh;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    /* Logo */
+    .logo-section {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo-section img {
+      max-width: 280px;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .logo-section img:hover {
+      transform: scale(1.02);
+    }
+
+    /* Main Card */
+    .main-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .logo-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: white;
+      box-shadow: 0 8px 32px var(--accent-glow);
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-text p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* Grid Layout */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    /* НИЖНЯЯ НАДПИСЬ — ОТСТУП УВЕЛИЧЕН */
-    .page-bottom-thanks{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:30px; /* УВЕЛИЧЕН ОТСТУП */
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:12px 18px;
-      border-radius:12px;
-      font-size:15px;
-      text-align:center;
-      color:var(--muted);
-      backdrop-filter:blur(6px);
-      max-width:92%;
-      line-height:1.25;
-      pointer-events:none;
-      box-shadow:0 10px 30px rgba(2,6,23,0.6);
-      white-space:pre-line;
-    }
-    @media(max-width:520px){
-      .page-bottom-thanks{
-        bottom:22px;
-        font-size:14px;
-        padding:10px 14px;
-      }
+    /* Drop Zone */
+    .drop-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: 20px;
+      padding: 40px;
+      background: var(--glass);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Остальной стиль сайта — БЕЗ ИЗМЕНЕНИЙ */
-    .card{width:960px;max-width:100%;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:26px;box-shadow:0 8px 30px rgba(2,6,23,0.6);}
-    header{display:flex;align-items:center;gap:16px}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700}
-    h1{margin:0;font-size:20px}
-    p.lead{margin:6px 0 18px;color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
-    .drop{border:2px dashed rgba(255,255,255,0.05);background:var(--glass);padding:18px;border-radius:10px;min-height:180px;display:flex;flex-direction:column;gap:12px}
-    .drop.dragover{border-color:rgba(124,58,237,0.9);box-shadow:0 6px 18px rgba(124,58,237,0.06)}
-    .drop input[type=file]{display:none}
-    button{background:linear-gradient(90deg,var(--accent),#4f46e5);border:none;color:white;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
-    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-    .meta{font-size:13px;color:var(--muted)}
-    .progress{height:10px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden}
-    .bar{height:100%;width:0%;background:linear-gradient(90deg,#60a5fa,#7c3aed);transition:width .2s}
-    .right{background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0.01));padding:16px;border-radius:10px}
-    .section-title{font-size:13px;color:var(--muted);margin-bottom:8px}
-    audio{width:100%;margin-top:8px}
-    footer{margin-top:14px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
-    @media(max-width:900px){.grid{grid-template-columns:1fr;}.right{order:2}}
+    .drop-zone::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 40px var(--accent-glow);
+    }
+
+    .drop-zone.dragover::before {
+      opacity: 1;
+    }
+
+    .drop-zone-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .drop-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    .drop-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .drop-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px var(--accent-glow);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+
+    .file-info {
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--glass);
+      border-radius: 12px;
+      display: none;
+    }
+
+    .file-info.visible {
+      display: block;
+    }
+
+    .file-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+
+    .file-meta {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-card {
+      background: var(--glass);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .status-text {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Audio Player */
+    .audio-wrapper {
+      margin-bottom: 16px;
+    }
+
+    .audio-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    audio {
+      width: 100%;
+      border-radius: 12px;
+      filter: invert(0.1);
+    }
+
+    audio::-webkit-media-controls-panel {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.2));
+    }
+
+    /* Track Info */
+    .track-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .info-item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .info-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    .footer-note {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* Bottom Thanks */
+    .bottom-thanks {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 14, 26, 0.9);
+      backdrop-filter: blur(20px);
+      padding: 16px 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+
+    .bottom-thanks a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .main-card {
+        padding: 24px;
+      }
+
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .drop-zone {
+        padding: 30px 20px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <!-- Logo -->
+    <div class="logo-section">
+      <img src="INVOISE.png" alt="INVOISE">
+    </div>
 
-  <!-- ЛОГО СТРОГО ПО ЦЕНТРУ И НАД ВСЕМ -->
-  <div class="page-top-logo">
-    <img src="INVOISE.png" alt="INVOISE" style="width: 180px; height: auto;">
-  </div>
-
-  <div class="card">
-    <header>
-      <div class="logo">IV</div>
-      <div>
-        <h1>Intelligence Vocal</h1>
-        <p class="lead">Загрузите вокальный трек — получим <strong>студийную стерео панораму</strong></p>
-      </div>
-    </header>
-
-    <div class="grid">
-      <div>
-        <div id="drop" class="drop">
-          <div style="display:flex; justify-content:space-between; align-items:center">
-            <div>
-              <div style="font-weight:600">Перетащите файл сюда</div>
-              <div class="meta">Поддерживается: WAV, MP3, OGG и др.</div>
-            </div>
-            <div>
-              <label>
-                <button class="ghost" onclick="document.getElementById('fileInput').click()">Выбрать файл</button>
-              </label>
-              <input id="fileInput" type="file" accept="audio/*">
-            </div>
-          </div>
-
-          <div id="fileInfo" class="meta" style="margin-top:6px;">Файл не выбран</div>
-
-          <div style="margin-top:auto; text-align:right">
-            <button id="convertBtn">Конвертировать</button>
-          </div>
+    <!-- Main Card -->
+    <div class="main-card">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-badge">IV</div>
+        <div class="header-text">
+          <h1>Intelligence Vocal</h1>
+          <p>Профессиональная студия обработки вокала онлайн. Загрузите трек — получите объемное студийное звучание.</p>
         </div>
       </div>
 
-      <aside class="right">
-        <div class="section-title">Превью & Загрузка</div>
-        <div id="playerArea"><div class="meta">Результат появится здесь</div></div>
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <!-- Left Column -->
+        <div>
+          <div class="drop-zone" id="dropZone">
+            <div class="drop-zone-content">
+              <div class="drop-icon">🎙️</div>
+              <div class="drop-title">Перетащите аудиофайл сюда</div>
+              <div class="drop-subtitle">WAV, MP3, OGG, FLAC до 100MB</div>
+              <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                📁 Выбрать файл
+              </button>
+              <input type="file" id="fileInput" class="file-input" accept="audio/*">
+            </div>
 
-        <div style="margin-top:12px">
-          <div class="section-title">Прогресс</div>
-          <div class="progress"><div id="bar" class="bar"></div></div>
-          <div id="status" class="meta" style="margin-top:8px">Ожидание</div>
+            <div class="file-info" id="fileInfo">
+              <div class="file-name" id="fileName"></div>
+              <div class="file-meta" id="fileMeta"></div>
+            </div>
+
+            <div style="margin-top: 24px; text-align: right;">
+              <button class="btn btn-primary" id="processBtn" disabled>
+                ✨ Обработать вокал
+              </button>
+            </div>
+          </div>
+
+          <!-- Features -->
+          <div class="features">
+            <div class="feature-item">
+              <div class="feature-icon">🎚️</div>
+              <span>Эквализация</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🔊</div>
+              <span>Компрессия</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🌊</div>
+              <span>Реверберация</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🎧</div>
+              <span>Стерео расширение</span>
+            </div>
+          </div>
         </div>
 
-        <div style="margin-top:12px">
-          <div class="section-title">Информация</div>
-          <div class="meta" id="infoBox">Пока пусто</div>
-        </div>
-      </aside>
-    </div>
+        <!-- Right Column -->
+        <aside class="sidebar">
+          <!-- Progress -->
+          <div class="sidebar-card">
+            <div class="sidebar-title">Прогресс обработки</div>
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="status-text" id="statusText">Ожидание файла</div>
+            </div>
+          </div>
 
-    <footer>
-      <div>Полностью локальная обработка — экспорт: WAV 32-bit float, 96 kHz, 3 канала</div>
-      <div></div>
-    </footer>
+          <!-- Track Info -->
+          <div class="sidebar-card" id="trackInfoCard" style="display: none;">
+            <div class="sidebar-title">Информация о треке</div>
+            <div class="track-info">
+              <div class="info-item">
+                <div class="info-label">Длительность</div>
+                <div class="info-value" id="infoDuration">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Каналы</div>
+                <div class="info-value" id="infoChannels">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Частота</div>
+                <div class="info-value" id="infoSampleRate">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Размер</div>
+                <div class="info-value" id="infoSize">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Player & Download -->
+          <div class="sidebar-card" id="playerCard" style="display: none;">
+            <div class="sidebar-title">Результат</div>
+            <div class="audio-wrapper">
+              <div class="audio-label">Оригинал:</div>
+              <audio id="originalPlayer" controls></audio>
+            </div>
+            <div class="audio-wrapper">
+              <div class="audio-label" style="color: var(--accent-primary);">Обработано:</div>
+              <audio id="processedPlayer" controls></audio>
+            </div>
+            <button class="btn btn-primary" id="downloadBtn" style="width: 100%; margin-top: 16px;">
+              💾 Скачать WAV (96kHz)
+            </button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-note">
+        Полностью локальная обработка • Экспорт: WAV 32-bit float, 96 kHz, стерео
+      </div>
+    </div>
   </div>
 
-  <!-- НИЖНЯЯ БЛАГОДАРНОСТЬ -->
-  <div class="page-bottom-thanks">
-    Если вам нравится мой сервис и он вам полезен<br>
-    — Вы можете отблагодарить меня чашечкой кофе +79996370785
+  <!-- Bottom Thanks -->
+  <div class="bottom-thanks">
+    Если сервис вам полезен — поддержите чашечкой кофе<br>
+    <a href="tel:+79996370785">+7 999 637-07-85</a>
   </div>
-
-  <script>
-// === INVOISE — Профессиональная обработка вокала ===
-
-const dropZone = document.getElementById('drop');
-const fileInput = document.getElementById('fileInput');
-const fileInfo = document.getElementById('fileInfo');
-const convertBtn = document.getElementById('convertBtn');
-const playerArea = document.getElementById('playerArea');
-const bar = document.getElementById('bar');
-const status = document.getElementById('status');
-const infoBox = document.getElementById('infoBox');
-
-let audioContext = null;
-let originalBuffer = null;
-let fileName = '';
-
-// Drag & Drop обработчики
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.classList.add('dragover');
-});
-
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('dragover');
-});
-
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZone.classList.remove('dragover');
-  const files = e.dataTransfer.files;
-  if (files.length > 0 && files[0].type.startsWith('audio/')) {
-    loadAudioFile(files[0]);
-  }
-});
-
-fileInput.addEventListener('change', (e) => {
-  if (e.target.files.length > 0) {
-    loadAudioFile(e.target.files[0]);
-  }
-});
-
-async function loadAudioFile(file) {
-  fileName = file.name;
-  fileInfo.textContent = `${file.name} • ${(file.size / 1024 / 1024).toFixed(2)} MB`;
-  status.textContent = 'Загрузка файла...';
-  bar.style.width = '20%';
-  
-  try {
-    if (!audioContext) {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 96000 });
-    }
-    
-    const arrayBuffer = await file.arrayBuffer();
-    originalBuffer = await audioContext.decodeAudioData(arrayBuffer);
-    
-    bar.style.width = '100%';
-    status.textContent = 'Файл готов к обработке';
-    infoBox.innerHTML = `
-      <div>Длительность: ${(originalBuffer.duration).toFixed(2)} сек</div>
-      <div>Каналов: ${originalBuffer.numberOfChannels}</div>
-      <div>Частота: ${originalBuffer.sampleRate} Hz</div>
-    `;
-    
-    // Показать оригинальный плеер
-    showOriginalPlayer();
-  } catch (err) {
-    status.textContent = 'Ошибка загрузки: ' + err.message;
-    bar.style.width = '0%';
-  }
-}
-
-function showOriginalPlayer() {
-  playerArea.innerHTML = `
-    <div class="meta" style="margin-bottom:8px;">Оригинал:</div>
-    <audio id="originalAudio" controls></audio>
-  `;
-  const audioEl = document.getElementById('originalAudio');
-  audioEl.src = URL.createObjectURL(new Blob([originalBuffer.getChannelData(0).buffer], { type: 'audio/wav' }));
-}
-
-convertBtn.addEventListener('click', async () => {
-  if (!originalBuffer) {
-    alert('Сначала загрузите аудиофайл!');
-    return;
-  }
-  
-  try {
-    status.textContent = 'Обработка вокала...';
-    bar.style.width = '30%';
-    convertBtn.disabled = true;
-    
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    // Создаем обработанный буфер
-    const processedBuffer = await processVocal(originalBuffer);
-    
-    bar.style.width = '100%';
-    status.textContent = 'Готово!';
-    infoBox.innerHTML += `<div style="margin-top:8px;color:#7c3aed">✓ Обработка завершена</div>`;
-    
-    // Показываем результат
-    showProcessedPlayer(processedBuffer);
-    
-    convertBtn.disabled = false;
-  } catch (err) {
-    status.textContent = 'Ошибка: ' + err.message;
-    convertBtn.disabled = false;
-    bar.style.width = '0%';
-  }
-});
-
-async function processVocal(inputBuffer) {
-  const sampleRate = 96000;
-  const numChannels = 2; // Стерео
-  const length = inputBuffer.length * (sampleRate / inputBuffer.sampleRate);
-  
-  const outputBuffer = audioContext.createBuffer(numChannels, length, sampleRate);
-  
-  // Получаем данные из оригинального буфера
-  const inputData = [];
-  for (let ch = 0; ch < inputBuffer.numberOfChannels; ch++) {
-    inputData.push(inputBuffer.getChannelData(ch));
-  }
-  
-  // Интерполяция до 96kHz если нужно
-  const ratio = sampleRate / inputBuffer.sampleRate;
-  const resampledData = [];
-  for (let ch = 0; ch < numChannels; ch++) {
-    const channelData = new Float32Array(length);
-    const srcChannel = inputData[Math.min(ch, inputData.length - 1)];
-    
-    for (let i = 0; i < length; i++) {
-      const srcIndex = i / ratio;
-      const index = Math.floor(srcIndex);
-      const frac = srcIndex - index;
-      
-      if (index + 1 < srcChannel.length) {
-        channelData[i] = srcChannel[index] * (1 - frac) + srcChannel[index + 1] * frac;
-      } else {
-        channelData[i] = srcChannel[Math.min(index, srcChannel.length - 1)] || 0;
-      }
-    }
-    resampledData.push(channelData);
-  }
-  
-  // Применяем обработку к каждому каналу
-  for (let ch = 0; ch < numChannels; ch++) {
-    let channelData = resampledData[ch];
-    
-    // 1. Эквализация (High-pass фильтр для очистки низких частот)
-    channelData = highPassFilter(channelData, sampleRate, 80);
-    
-    // 2. Добавляем теплоты (легкое усиление низких средних)
-    channelData = applyEQ(channelData, sampleRate, 'lowShelf', 200, 3);
-    
-    // 3. Добавляем присутствия (воздушность на высоких)
-    channelData = applyEQ(channelData, sampleRate, 'highShelf', 8000, 4);
-    
-    // 4. Компрессия
-    channelData = compress(channelData, 0.3, 0.005, 0.1);
-    
-    // 5. Сатуратор для теплоты
-    channelData = saturate(channelData, 0.15);
-    
-    // 6. Стерео расширение (разница между каналами)
-    if (ch === 0) {
-      channelData = stereoWiden(channelData, resampledData[1], -0.15);
-    } else {
-      channelData = stereoWiden(channelData, resampledData[0], 0.15);
-    }
-    
-    // 7. Реверберация (простая convolution-like)
-    channelData = addReverb(channelData, sampleRate, 0.25);
-    
-    // 8. Дилей для объема
-    channelData = addDelay(channelData, sampleRate, 0.03, 0.15);
-    
-    outputBuffer.copyToChannel(channelData, ch);
-  }
-  
-  return outputBuffer;
-}
-
-// High-pass фильтр
-function highPassFilter(data, sampleRate, cutoffFreq) {
-  const rc = 1.0 / (cutoffFreq * 2 * Math.PI);
-  const dt = 1.0 / sampleRate;
-  const alpha = rc / (rc + dt);
-  
-  const output = new Float32Array(data.length);
-  output[0] = data[0];
-  
-  for (let i = 1; i < data.length; i++) {
-    output[i] = alpha * (output[i - 1] + data[i] - data[i - 1]);
-  }
-  
-  return output;
-}
-
-// Простой EQ
-function applyEQ(data, sampleRate, type, freq, gain) {
-  const output = new Float32Array(data.length);
-  const normalizedFreq = freq / sampleRate;
-  
-  if (type === 'lowShelf') {
-    const b0 = 1 + Math.sqrt(2) * Math.sqrt(gain);
-    const b1 = -2 * Math.sqrt(gain);
-    const a1 = -Math.sqrt(gain);
-    
-    let y1 = 0, x1 = 0;
-    for (let i = 0; i < data.length; i++) {
-      output[i] = b0 * data[i] + b1 * x1 - a1 * y1;
-      x1 = data[i];
-      y1 = output[i];
-    }
-  } else if (type === 'highShelf') {
-    const b0 = 1 + Math.sqrt(2) * Math.sqrt(gain);
-    const b1 = -2 * Math.sqrt(gain);
-    const a1 = -Math.sqrt(gain);
-    
-    let y1 = 0, x1 = 0;
-    for (let i = 0; i < data.length; i++) {
-      output[i] = b0 * data[i] + b1 * x1 - a1 * y1;
-      x1 = data[i];
-      y1 = output[i];
-    }
-  } else {
-    for (let i = 0; i < data.length; i++) {
-      output[i] = data[i];
-    }
-  }
-  
-  return output;
-}
-
-// Компрессор
-function compress(data, threshold, attack, release) {
-  const output = new Float32Array(data.length);
-  let envelope = 0;
-  
-  for (let i = 0; i < data.length; i++) {
-    const absVal = Math.abs(data[i]);
-    const db = 20 * Math.log10(absVal + 0.0001);
-    
-    if (db > threshold) {
-      envelope = Math.max(envelope - release, db - threshold);
-    } else {
-      envelope = Math.min(envelope + attack, 0);
-    }
-    
-    const gainReduction = Math.pow(10, -envelope / 20);
-    output[i] = data[i] * gainReduction;
-  }
-  
-  return output;
-}
-
-// Сатурация (теплота)
-function saturate(data, amount) {
-  const output = new Float32Array(data.length);
-  for (let i = 0; i < data.length; i++) {
-    const x = data[i] * (1 + amount);
-    output[i] = Math.tanh(x);
-  }
-  return output;
-}
-
-// Стерео расширение
-function stereoWiden(channel, otherChannel, pan) {
-  const output = new Float32Array(channel.length);
-  for (let i = 0; i < channel.length; i++) {
-    output[i] = channel[i] * (1 - Math.abs(pan)) + otherChannel[i] * pan;
-  }
-  return output;
-}
-
-// Реверберация (простая)
-function addReverb(data, sampleRate, wetAmount) {
-  const output = new Float32Array(data.length);
-  const delayTime = Math.floor(sampleRate * 0.05);
-  const buffer = new Float32Array(delayTime + 100);
-  let writePos = 0;
-  
-  for (let i = 0; i < data.length; i++) {
-    const readPos = (writePos - delayTime + buffer.length) % buffer.length;
-    const delayed = buffer[readPos] * 0.3;
-    buffer[writePos] = data[i] + delayed * 0.5;
-    output[i] = data[i] * (1 - wetAmount) + delayed * wetAmount;
-    writePos = (writePos + 1) % buffer.length;
-  }
-  
-  return output;
-}
-
-// Дилей
-function addDelay(data, sampleRate, delaySec, feedback) {
-  const output = new Float32Array(data.length);
-  const delaySamples = Math.floor(sampleRate * delaySec);
-  const buffer = new Float32Array(delaySamples + 1000);
-  let writePos = 0;
-  
-  for (let i = 0; i < data.length; i++) {
-    const readPos = (writePos - delaySamples + buffer.length) % buffer.length;
-    const delayed = buffer[readPos];
-    buffer[writePos] = data[i] + delayed * feedback;
-    output[i] = data[i] + delayed * 0.3;
-    writePos = (writePos + 1) % buffer.length;
-  }
-  
-  return output;
-}
-
-function showProcessedPlayer(buffer) {
-  const wavBlob = bufferToWave(buffer, buffer.length);
-  const url = URL.createObjectURL(wavBlob);
-  
-  playerArea.innerHTML = `
-    <div class="meta" style="margin-bottom:8px;color:#7c3aed;">Обработано:</div>
-    <audio id="processedAudio" controls src="${url}"></audio>
-    <div style="margin-top:12px">
-      <a href="${url}" download="invoise_${fileName.replace(/\.[^/.]+$/, '')}_processed.wav">
-        <button style="width:100%">Скачать результат (WAV 96kHz)</button>
-      </a>
-    </div>
-  `;
-}
-
-function bufferToWave(abuffer, len) {
-  const numOfChan = abuffer.numberOfChannels;
-  const length = len * numOfChan * 2 + 44;
-  const buffer = new ArrayBuffer(length);
-  const view = new DataView(buffer);
-  const channels = [];
-  let i;
-  let sample;
-  let offset = 0;
-  let pos = 0;
-
-  // RIFF identifier
-  setUint32(0x52494646);
-  // file length
-  setUint32(length - 8);
-  // RIFF type
-  setUint32(0x57415645);
-
-  // format chunk identifier
-  setUint32(0x666d7420);
-  // format chunk length
-  setUint32(16);
-  // sample format (raw)
-  setUint16(3);
-  // channel count
-  setUint16(numOfChan);
-  // sample rate
-  setUint32(abuffer.sampleRate);
-  // byte rate (sample rate * block align)
-  setUint32(abuffer.sampleRate * 4 * numOfChan);
-  // block align (channel count * bytes per sample)
-  setUint16(numOfChan * 4);
-  // bits per sample
-  setUint16(32);
-
-  // data chunk identifier
-  setUint32(0x64617461);
-  // data chunk length
-  setUint32(len * numOfChan * 4);
-
-  for (i = 0; i < abuffer.numberOfChannels; i++) {
-    channels.push(abuffer.getChannelData(i));
-  }
-
-  while (pos < len) {
-    for (i = 0; i < numOfChan; i++) {
-      sample = Math.max(-1, Math.min(1, channels[i][pos]));
-      sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767) | 0;
-      view.setInt16(44 + offset, sample, true);
-      offset += 2;
-    }
-    pos++;
-  }
-
-  return new Blob([view], { type: 'audio/wav' });
-
-  function setUint16(data) {
-    view.setUint16(offset, data, true);
-    offset += 2;
-  }
-
-  function setUint32(data) {
-    view.setUint32(offset, data, true);
-    offset += 4;
-  }
-}
-  </script>
 </body>
 </html>
+
+  <script>
+    // === INVOISE — Профессиональная обработка вокала ===
+    
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileMeta = document.getElementById('fileMeta');
+    const processBtn = document.getElementById('processBtn');
+    const progressFill = document.getElementById('progressFill');
+    const statusText = document.getElementById('statusText');
+    const trackInfoCard = document.getElementById('trackInfoCard');
+    const playerCard = document.getElementById('playerCard');
+    const originalPlayer = document.getElementById('originalPlayer');
+    const processedPlayer = document.getElementById('processedPlayer');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const infoDuration = document.getElementById('infoDuration');
+    const infoChannels = document.getElementById('infoChannels');
+    const infoSampleRate = document.getElementById('infoSampleRate');
+    const infoSize = document.getElementById('infoSize');
+    
+    let audioContext = null;
+    let originalBuffer = null;
+    let processedBlob = null;
+    let currentFileName = '';
+    
+    // Drag & Drop
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0 && files[0].type.startsWith('audio/')) {
+        loadAudioFile(files[0]);
+      }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        loadAudioFile(e.target.files[0]);
+      }
+    });
+    
+    async function loadAudioFile(file) {
+      currentFileName = file.name;
+      fileName.textContent = file.name;
+      fileMeta.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+      fileInfo.classList.add('visible');
+      
+      statusText.textContent = 'Загрузка файла...';
+      progressFill.style.width = '20%';
+      
+      try {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 96000 });
+        }
+        
+        const arrayBuffer = await file.arrayBuffer();
+        originalBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        
+        progressFill.style.width = '100%';
+        statusText.textContent = 'Файл готов к обработке';
+        processBtn.disabled = false;
+        
+        // Показать информацию о треке
+        trackInfoCard.style.display = 'block';
+        infoDuration.textContent = `${originalBuffer.duration.toFixed(2)} сек`;
+        infoChannels.textContent = originalBuffer.numberOfChannels;
+        infoSampleRate.textContent = `${originalBuffer.sampleRate} Hz`;
+        infoSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+        
+        // Показать оригинальный плеер
+        showOriginalPlayer();
+        
+      } catch (err) {
+        statusText.textContent = 'Ошибка: ' + err.message;
+        progressFill.style.width = '0%';
+        console.error(err);
+      }
+    }
+    
+    function showOriginalPlayer() {
+      const wavBlob = bufferToWave(originalBuffer, originalBuffer.length);
+      const url = URL.createObjectURL(wavBlob);
+      originalPlayer.src = url;
+      playerCard.style.display = 'block';
+    }
+    
+    processBtn.addEventListener('click', async () => {
+      if (!originalBuffer) {
+        alert('Сначала загрузите аудиофайл!');
+        return;
+      }
+      
+      try {
+        statusText.textContent = 'Обработка вокала...';
+        progressFill.style.width = '30%';
+        processBtn.disabled = true;
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        const processedBuffer = await processVocal(originalBuffer);
+        
+        progressFill.style.width = '100%';
+        statusText.textContent = 'Готово! ✓';
+        
+        // Создать blob для скачивания
+        processedBlob = bufferToWave(processedBuffer, processedBuffer.length);
+        const url = URL.createObjectURL(processedBlob);
+        processedPlayer.src = url;
+        
+        downloadBtn.onclick = () => {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `invoise_${currentFileName.replace(/\.[^/.]+$/, '')}_processed.wav`;
+          a.click();
+        };
+        
+        processBtn.disabled = false;
+        
+      } catch (err) {
+        statusText.textContent = 'Ошибка: ' + err.message;
+        processBtn.disabled = false;
+        progressFill.style.width = '0%';
+        console.error(err);
+      }
+    });
+    
+    async function processVocal(inputBuffer) {
+      const sampleRate = 96000;
+      const numChannels = 2;
+      const length = Math.floor(inputBuffer.length * (sampleRate / inputBuffer.sampleRate));
+      
+      const outputBuffer = audioContext.createBuffer(numChannels, length, sampleRate);
+      
+      const inputData = [];
+      for (let ch = 0; ch < inputBuffer.numberOfChannels; ch++) {
+        inputData.push(inputBuffer.getChannelData(ch));
+      }
+      
+      const ratio = sampleRate / inputBuffer.sampleRate;
+      const resampledData = [];
+      
+      for (let ch = 0; ch < numChannels; ch++) {
+        const channelData = new Float32Array(length);
+        const srcChannel = inputData[Math.min(ch, inputData.length - 1)];
+        
+        for (let i = 0; i < length; i++) {
+          const srcIndex = i / ratio;
+          const index = Math.floor(srcIndex);
+          const frac = srcIndex - index;
+          
+          if (index + 1 < srcChannel.length) {
+            channelData[i] = srcChannel[index] * (1 - frac) + srcChannel[index + 1] * frac;
+          } else {
+            channelData[i] = srcChannel[Math.min(index, srcChannel.length - 1)] || 0;
+          }
+        }
+        resampledData.push(channelData);
+      }
+      
+      for (let ch = 0; ch < numChannels; ch++) {
+        let channelData = resampledData[ch];
+        
+        // 1. High-pass фильтр
+        channelData = highPassFilter(channelData, sampleRate, 80);
+        
+        // 2. Теплота (низкие средние)
+        channelData = applyLowShelf(channelData, sampleRate, 200, 2);
+        
+        // 3. Воздушность (высокие)
+        channelData = applyHighShelf(channelData, sampleRate, 10000, 3);
+        
+        // 4. Компрессия
+        channelData = compress(channelData, 0.3, 0.005, 0.1);
+        
+        // 5. Сатурация
+        channelData = saturate(channelData, 0.15);
+        
+        // 6. Стерео расширение
+        if (ch === 0) {
+          channelData = stereoWiden(channelData, resampledData[1], -0.15);
+        } else {
+          channelData = stereoWiden(channelData, resampledData[0], 0.15);
+        }
+        
+        // 7. Реверберация
+        channelData = addReverb(channelData, sampleRate, 0.3);
+        
+        // 8. Дилей
+        channelData = addDelay(channelData, sampleRate, 0.025, 0.2);
+        
+        outputBuffer.copyToChannel(channelData, ch);
+      }
+      
+      return outputBuffer;
+    }
+    
+    function highPassFilter(data, sampleRate, cutoffFreq) {
+      const rc = 1.0 / (cutoffFreq * 2 * Math.PI);
+      const dt = 1.0 / sampleRate;
+      const alpha = rc / (rc + dt);
+      
+      const output = new Float32Array(data.length);
+      output[0] = data[0];
+      
+      for (let i = 1; i < data.length; i++) {
+        output[i] = alpha * (output[i - 1] + data[i] - data[i - 1]);
+      }
+      
+      return output;
+    }
+    
+
+    // Low Shelf EQ (усиление низких)
+    function applyLowShelf(data, sampleRate, freq, gainDb) {
+      const output = new Float32Array(data.length);
+      const gain = Math.pow(10, gainDb / 20);
+      const K = Math.tan(Math.PI * freq / sampleRate);
+      const norm = 1 / (1 + K / Math.sqrt(gain) + K * K);
+      
+      const b0 = K * K * norm;
+      const b1 = 2 * b0;
+      const b2 = b0;
+      const a1 = 2 * (K * K - 1) * norm;
+      const a2 = (1 - K / Math.sqrt(gain) + K * K) * norm;
+      
+      let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+      
+      for (let i = 0; i < data.length; i++) {
+        const x = data[i];
+        output[i] = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
+        x2 = x1; x1 = x;
+        y2 = y1; y1 = output[i];
+      }
+      
+      return output;
+    }
+    
+    // High Shelf EQ (усиление высоких)
+    function applyHighShelf(data, sampleRate, freq, gainDb) {
+      const output = new Float32Array(data.length);
+      const gain = Math.pow(10, gainDb / 20);
+      const K = Math.tan(Math.PI * freq / sampleRate);
+      const norm = 1 / (1 + Math.sqrt(gain) * K + K * K);
+      
+      const b0 = K * K * norm;
+      const b1 = -2 * b0;
+      const b2 = b0;
+      const a1 = 2 * (K * K - 1) * norm;
+      const a2 = (1 - Math.sqrt(gain) * K + K * K) * norm;
+      
+      let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+      
+      for (let i = 0; i < data.length; i++) {
+        const x = data[i];
+        output[i] = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
+        x2 = x1; x1 = x;
+        y2 = y1; y1 = output[i];
+      }
+      
+      return output;
+    }
+
+    // Компрессор
+    function compress(data, thresholdDb, ratio, attack, release) {
+      const output = new Float32Array(data.length);
+      let envelope = 0;
+      const threshold = Math.pow(10, thresholdDb / 20);
+      
+      const alphaAttack = Math.exp(-1 / (attack * 96000));
+      const alphaRelease = Math.exp(-1 / (release * 96000));
+      
+      for (let i = 0; i < data.length; i++) {
+        const absVal = Math.abs(data[i]);
+        
+        if (absVal > envelope) {
+          envelope = alphaAttack * (envelope - absVal) + absVal;
+        } else {
+          envelope = alphaRelease * (envelope - absVal) + absVal;
+        }
+        
+        let gain = 1;
+        if (envelope > threshold) {
+          const excess = envelope / threshold;
+          const dbExcess = 20 * Math.log10(excess);
+          const compressedDb = dbExcess / ratio;
+          const compressedLinear = Math.pow(10, compressedDb / 20);
+          gain = compressedLinear / excess;
+        }
+        
+        output[i] = data[i] * gain;
+      }
+      
+      return output;
+    }
+    
+    function saturate(data, amount) {
+      const output = new Float32Array(data.length);
+      for (let i = 0; i < data.length; i++) {
+        const x = data[i] * (1 + amount);
+        output[i] = Math.tanh(x);
+      }
+      return output;
+    }
+    
+    function stereoWiden(channel, otherChannel, pan) {
+      const output = new Float32Array(channel.length);
+      for (let i = 0; i < channel.length; i++) {
+        output[i] = channel[i] * (1 - Math.abs(pan)) + otherChannel[i] * pan;
+      }
+      return output;
+    }
+    
+
+    // Реверберация (алгоритмическая)
+    function addReverb(data, sampleRate, wetAmount) {
+      const output = new Float32Array(data.length);
+      const delayTimes = [0.023, 0.037, 0.053, 0.071];
+      const buffers = delayTimes.map(dt => new Float32Array(Math.floor(sampleRate * dt) + 100));
+      const writePos = [0, 0, 0, 0];
+      
+      for (let i = 0; i < data.length; i++) {
+        let reverbSum = 0;
+        
+        for (let j = 0; j < 4; j++) {
+          const readPos = (writePos[j] - Math.floor(buffers[j].length - 100) + buffers[j].length) % buffers[j].length;
+          const delayed = buffers[j][readPos];
+          buffers[j][writePos[j]] = data[i] * 0.5 + delayed * 0.3;
+          reverbSum += delayed;
+          writePos[j] = (writePos[j] + 1) % buffers[j].length;
+        }
+        
+        output[i] = data[i] * (1 - wetAmount) + (reverbSum / 4) * wetAmount;
+      }
+      
+      return output;
+    }
+    
+    // Дилей (эхо)
+    function addDelay(data, sampleRate, delaySec, feedback) {
+      const output = new Float32Array(data.length);
+      const delaySamples = Math.floor(sampleRate * delaySec);
+      const buffer = new Float32Array(delaySamples + 2000);
+      let writePos = 0;
+      
+      for (let i = 0; i < data.length; i++) {
+        const readPos = (writePos - delaySamples + buffer.length) % buffer.length;
+        const delayed = buffer[readPos];
+        buffer[writePos] = data[i] * 0.8 + delayed * feedback;
+        output[i] = data[i] + delayed * 0.25;
+        writePos = (writePos + 1) % buffer.length;
+      }
+      
+      return output;
+    }
+    
+    function bufferToWave(abuffer, len) {
+      const numOfChan = abuffer.numberOfChannels;
+      const length = len * numOfChan * 2 + 44;
+      const buffer = new ArrayBuffer(length);
+      const view = new DataView(buffer);
+      const channels = [];
+      let offset = 0;
+      let pos = 0;
+    
+      setUint32(0x52494646);
+      setUint32(length - 8);
+      setUint32(0x57415645);
+      setUint32(0x666d7420);
+      setUint32(16);
+      setUint16(3);
+      setUint16(numOfChan);
+      setUint32(abuffer.sampleRate);
+      setUint32(abuffer.sampleRate * 4 * numOfChan);
+      setUint16(numOfChan * 4);
+      setUint16(32);
+      setUint32(0x64617461);
+      setUint32(len * numOfChan * 4);
+    
+      for (let i = 0; i < abuffer.numberOfChannels; i++) {
+        channels.push(abuffer.getChannelData(i));
+      }
+    
+      while (pos < len) {
+        for (let i = 0; i < numOfChan; i++) {
+          let sample = Math.max(-1, Math.min(1, channels[i][pos]));
+          sample = (sample * 32767) | 0;
+          view.setInt16(44 + offset, sample, true);
+          offset += 2;
+        }
+        pos++;
+      }
+    
+      return new Blob([view], { type: 'audio/wav' });
+    
+      function setUint16(data) {
+        view.setUint16(offset, data, true);
+        offset += 2;
+      }
+    
+      function setUint32(data) {
+        view.setUint32(offset, data, true);
+        offset += 4;
+      }
+    }
+  </script>
+</body></html>
