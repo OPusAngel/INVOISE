@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090d1a" />
   <meta name="msvalidate.01" content="F37205B6FE4B18CAA7FF151ADA414FBA" />
 
   <title>INVOISE — Профессиональная обработка вокала</title>
-  <meta name="description" content="INVOISE — студийная обработка вокала онлайн. Объемное звучание, профессиональная эквализация, компрессия и реверберация." />
-  <meta name="keywords" content="invoise, обработка вокала, студия онлайн, эквализация, компрессия, реверберация, стерео панорама" />
+  <meta name="description" content="INVOISE — студийная обработка вокала онлайн. Эквализация, компрессия, реверберация и экспорт WAV 96 kHz." />
   <meta name="author" content="INVOISE" />
   <meta property="og:title" content="INVOISE — Профессиональная обработка вокала" />
   <meta property="og:description" content="Преврати свой вокал в студийное звучание за секунды" />
@@ -35,7 +35,6 @@
       --accent-primary: #8b5cf6;
       --accent-secondary: #5eead4;
       --accent-strong: #c084fc;
-      --accent-glow: rgba(139, 92, 246, 0.45);
       --text-primary: #ecf3ff;
       --text-secondary: #9aa9c2;
       --text-muted: #6780a9;
@@ -47,15 +46,8 @@
       --radius: 24px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -66,31 +58,27 @@
       color: var(--text-primary);
       min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 32px 18px 80px;
+      padding: 32px 18px 100px;
       position: relative;
       overflow-x: hidden;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: -30% -20% auto auto;
-      width: 620px;
-      height: 620px;
-      background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 62%);
-      pointer-events: none;
-    }
-
+    body::before,
     body::after {
       content: "";
       position: fixed;
-      inset: auto auto -30% -20%;
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(94, 234, 212, 0.12), transparent 62%);
       pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.13), transparent 62%);
+    }
+
+    body::before { inset: -28% -18% auto auto; }
+    body::after {
+      inset: auto auto -30% -20%;
+      background: radial-gradient(circle, rgba(94, 234, 212, 0.1), transparent 62%);
     }
 
     .container {
@@ -99,24 +87,17 @@
       z-index: 1;
     }
 
-    .logo-section {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
+    .logo-section { text-align: center; margin-bottom: 28px; }
     .logo-section img {
       width: min(320px, 62vw);
       height: auto;
       filter: drop-shadow(0 0 45px rgba(139, 92, 246, 0.32));
       transition: transform 0.25s ease;
     }
-
-    .logo-section img:hover {
-      transform: translateY(-2px) scale(1.01);
-    }
+    .logo-section img:hover { transform: translateY(-2px) scale(1.01); }
 
     .app-shell {
-      background: rgba(6, 9, 18, 0.68);
+      background: rgba(6, 9, 18, 0.7);
       border: 1px solid var(--border-color);
       border-radius: 28px;
       box-shadow: var(--shadow);
@@ -131,15 +112,10 @@
       justify-content: space-between;
       gap: 18px;
       margin-bottom: 28px;
-      padding: 4px 4px 0;
+      padding: 4px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
+    .brand { display: flex; align-items: center; gap: 18px; }
     .brand-badge {
       width: 64px;
       height: 64px;
@@ -148,16 +124,14 @@
       place-items: center;
       font-weight: 800;
       letter-spacing: 0.12em;
-      color: #fff;
       background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
       box-shadow: 0 18px 38px rgba(139, 92, 246, 0.35);
     }
 
-    .brand h1 {
+    h1 {
       font-size: clamp(1.6rem, 2vw, 2.2rem);
-      font-weight: 700;
       letter-spacing: -0.04em;
-      background: linear-gradient(135deg, #fff, #d9d8ff 40%, #9be6ff 100%);
+      background: linear-gradient(135deg, #ffffff, #d9d8ff 40%, #9be6ff 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -200,10 +174,10 @@
     }
 
     .card {
+      padding: 22px;
       background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(15, 23, 42, 0.72));
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
-      padding: 22px;
     }
 
     .drop-zone {
@@ -211,8 +185,7 @@
       min-height: 340px;
       border: 1.5px dashed rgba(147, 197, 253, 0.28);
       border-radius: 24px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(139, 92, 246, 0.04));
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(139, 92, 246, 0.04));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -229,15 +202,14 @@
       transition: opacity 0.25s ease;
     }
 
-    .drop-zone.dragover {
+    .drop-zone.dragover,
+    .drop-zone:focus-visible {
       border-color: rgba(168, 85, 247, 0.95);
-      background: rgba(139, 92, 246, 0.06);
       box-shadow: inset 0 0 0 1px rgba(168, 85, 247, 0.38), 0 0 38px rgba(139, 92, 246, 0.16);
+      outline: none;
     }
 
-    .drop-zone.dragover::before {
-      opacity: 1;
-    }
+    .drop-zone.dragover::before { opacity: 1; }
 
     .drop-zone-content {
       position: relative;
@@ -256,7 +228,7 @@
       place-items: center;
       font-size: 38px;
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.24), rgba(94, 234, 212, 0.18));
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
     }
 
     .drop-title {
@@ -268,7 +240,6 @@
 
     .drop-subtitle {
       color: var(--text-secondary);
-      font-size: 1rem;
       margin-bottom: 22px;
     }
 
@@ -294,10 +265,11 @@
       gap: 8px;
     }
 
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
+    .btn:hover:not(:disabled) { transform: translateY(-2px); }
+    .btn:focus-visible {
+      outline: 2px solid var(--accent-secondary);
+      outline-offset: 3px;
     }
-
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -317,7 +289,11 @@
     }
 
     .file-input {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .file-info {
@@ -329,16 +305,12 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
-    .file-info.visible {
-      display: block;
-    }
-
+    .file-info.visible { display: block; }
     .file-name {
       font-weight: 700;
       margin-bottom: 4px;
       word-break: break-all;
     }
-
     .file-meta {
       color: var(--text-secondary);
       font-size: 0.82rem;
@@ -396,22 +368,17 @@
       margin-bottom: 14px;
     }
 
-    .progress-wrap {
-      margin-top: 6px;
-    }
-
     .progress {
       position: relative;
       overflow: hidden;
       width: 100%;
       height: 8px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .progress-bar {
-      position: absolute;
-      inset: 0 auto 0 0;
+      height: 100%;
       width: 0%;
       border-radius: inherit;
       background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
@@ -425,6 +392,8 @@
       font-size: 0.9rem;
     }
 
+    .status-text.error { color: var(--danger); }
+
     .track-info {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -432,8 +401,8 @@
     }
 
     .info-item {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(148,163,184,0.08);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(148, 163, 184, 0.08);
       border-radius: 12px;
       padding: 12px 10px;
     }
@@ -474,16 +443,11 @@
       width: 100%;
       border-radius: 12px;
       filter: brightness(1.06) saturate(1.15);
-      background: rgba(255,255,255,0.02);
+      background: rgba(255, 255, 255, 0.02);
     }
 
-    .download-wrap {
-      margin-top: 8px;
-    }
-
-    .download-button {
-      width: 100%;
-    }
+    .download-wrap { margin-top: 8px; }
+    .download-button { width: 100%; }
 
     .footer-note {
       margin-top: 26px;
@@ -502,7 +466,7 @@
       width: min(92vw, 560px);
       background: rgba(9, 13, 24, 0.88);
       border: 1px solid var(--border-color);
-      box-shadow: 0 18px 46px rgba(2,6,23,0.55);
+      box-shadow: 0 18px 46px rgba(2, 6, 23, 0.55);
       border-radius: 16px;
       padding: 14px 18px;
       text-align: center;
@@ -519,69 +483,57 @@
     }
 
     @media (max-width: 920px) {
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .content-grid { grid-template-columns: 1fr; }
+      .header-row { flex-direction: column; align-items: flex-start; }
     }
 
     @media (max-width: 620px) {
-      .app-shell {
-        padding: 20px 14px;
-      }
+      body { padding: 20px 12px 110px; }
+      .app-shell { padding: 20px 14px; }
+      .brand { width: 100%; }
+      .features { grid-template-columns: 1fr; }
+      .track-info { grid-template-columns: 1fr 1fr; }
+      .meta-stack .btn { width: 100%; }
+    }
 
-      .brand {
-        width: 100%;
-      }
-
-      .features {
-        grid-template-columns: 1fr;
-      }
-
-      .track-info {
-        grid-template-columns: 1fr 1fr;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <div class="logo-section">
-      <img src="INVOISE.png" alt="INVOISE" />
+      <img src="INVOISE.png" alt="INVOISE" width="320" height="auto" />
     </div>
 
-    <div class="app-shell">
-      <div class="header-row">
+    <section class="app-shell" aria-labelledby="appTitle">
+      <header class="header-row">
         <div class="brand">
-          <div class="brand-badge">IV</div>
+          <div class="brand-badge" aria-hidden="true">IV</div>
           <div>
-            <h1>Intelligence Vocal</h1>
+            <h1 id="appTitle">Intelligence Vocal</h1>
             <p>Профессиональная студия обработки вокала онлайн</p>
           </div>
         </div>
         <div class="chip">Local Studio</div>
-      </div>
+      </header>
 
       <div class="content-grid">
         <div>
           <div class="card">
-            <div class="drop-zone" id="dropZone" tabindex="0" aria-label="Загрузить аудиофайл">
+            <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Загрузить аудиофайл">
               <div class="drop-zone-content">
-                <div class="drop-icon">🎙️</div>
+                <div class="drop-icon" aria-hidden="true">🎙️</div>
                 <div class="drop-title">Перетащите аудиофайл сюда</div>
                 <div class="drop-subtitle">WAV, MP3, OGG, FLAC, AAC до 100 МБ</div>
 
                 <div class="meta-stack">
-                  <button class="btn btn-secondary" type="button" id="chooseBtn">
-                    📁 Выбрать файл
-                  </button>
-                  <button class="btn btn-primary" type="button" id="processBtn" disabled>
-                    ✨ Обработать вокал
-                  </button>
+                  <button class="btn btn-secondary" type="button" id="chooseBtn">📁 Выбрать файл</button>
+                  <button class="btn btn-primary" type="button" id="processBtn" disabled>✨ Обработать вокал</button>
                 </div>
 
                 <input type="file" id="fileInput" class="file-input" accept="audio/*" />
@@ -594,7 +546,7 @@
             </div>
           </div>
 
-          <div class="features">
+          <div class="features" aria-label="Возможности">
             <div class="feature-item"><div class="feature-icon">🎚️</div><span>Эквализация</span></div>
             <div class="feature-item"><div class="feature-icon">🔊</div><span>Компрессия</span></div>
             <div class="feature-item"><div class="feature-icon">🌊</div><span>Реверберация</span></div>
@@ -605,15 +557,13 @@
         <aside class="sidebar">
           <div class="sidebar-card">
             <div class="sidebar-title">Прогресс обработки</div>
-            <div class="progress-wrap">
-              <div class="progress" aria-label="Progress">
-                <div class="progress-bar" id="progressFill"></div>
-              </div>
-              <div class="status-text" id="statusText">Ожидание файла</div>
+            <div class="progress" role="progressbar" aria-label="Прогресс обработки" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar" id="progressFill"></div>
             </div>
+            <div class="status-text" id="statusText" role="status" aria-live="polite">Ожидание файла</div>
           </div>
 
-          <div class="sidebar-card" id="trackInfoCard" style="display: none;">
+          <div class="sidebar-card" id="trackInfoCard" hidden>
             <div class="sidebar-title">Информация о треке</div>
             <div class="track-info">
               <div class="info-item">
@@ -635,7 +585,7 @@
             </div>
           </div>
 
-          <div class="sidebar-card" id="playerCard" style="display: none;">
+          <div class="sidebar-card" id="playerCard" hidden>
             <div class="sidebar-title">Результат</div>
             <div class="audio-stack">
               <div class="audio-group">
@@ -649,9 +599,7 @@
             </div>
 
             <div class="download-wrap">
-              <button class="btn btn-primary download-button" type="button" id="downloadBtn">
-                💾 Скачать WAV (96 kHz)
-              </button>
+              <button class="btn btn-primary download-button" type="button" id="downloadBtn" disabled>💾 Скачать WAV (96 kHz)</button>
             </div>
           </div>
         </aside>
@@ -660,8 +608,8 @@
       <div class="footer-note">
         Полностью локальная обработка • Экспорт: WAV 32-bit float, 96 kHz, стерео
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <div class="bottom-thanks">
     Если сервис вам полезен — поддержите чашечкой кофе<br />
@@ -669,39 +617,92 @@
   </div>
 
   <script>
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const chooseBtn = document.getElementById('chooseBtn');
-    const processBtn = document.getElementById('processBtn');
-    const fileInfo = document.getElementById('fileInfo');
-    const fileName = document.getElementById('fileName');
-    const fileMeta = document.getElementById('fileMeta');
-    const statusText = document.getElementById('statusText');
-    const progressFill = document.getElementById('progressFill');
-    const trackInfoCard = document.getElementById('trackInfoCard');
-    const playerCard = document.getElementById('playerCard');
-    const originalPlayer = document.getElementById('originalPlayer');
-    const processedPlayer = document.getElementById('processedPlayer');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const infoDuration = document.getElementById('infoDuration');
-    const infoChannels = document.getElementById('infoChannels');
-    const infoSampleRate = document.getElementById('infoSampleRate');
-    const infoSize = document.getElementById('infoSize');
+    'use strict';
+
+    const MAX_FILE_SIZE = 100 * 1024 * 1024;
+    const MAX_DURATION = 20 * 60;
+    const OUTPUT_RATE = 96000;
+
+    const $ = (id) => document.getElementById(id);
+
+    const dropZone = $('dropZone');
+    const fileInput = $('fileInput');
+    const chooseBtn = $('chooseBtn');
+    const processBtn = $('processBtn');
+    const fileInfo = $('fileInfo');
+    const fileName = $('fileName');
+    const fileMeta = $('fileMeta');
+    const statusText = $('statusText');
+    const progressFill = $('progressFill');
+    const progress = document.querySelector('.progress');
+    const trackInfoCard = $('trackInfoCard');
+    const playerCard = $('playerCard');
+    const originalPlayer = $('originalPlayer');
+    const processedPlayer = $('processedPlayer');
+    const downloadBtn = $('downloadBtn');
+    const infoDuration = $('infoDuration');
+    const infoChannels = $('infoChannels');
+    const infoSampleRate = $('infoSampleRate');
+    const infoSize = $('infoSize');
 
     let audioContext = null;
     let originalBuffer = null;
-    let processedBuffer = null;
     let currentFileName = '';
     let currentDownloadUrl = null;
     let currentOriginalUrl = null;
+    let loadSequence = 0;
+
+    function revokeUrl(url) {
+      if (url) URL.revokeObjectURL(url);
+    }
+
+    function formatSize(bytes) {
+      return `${(bytes / 1024 / 1024).toFixed(2)} МБ`;
+    }
+
+    function setStatus(value, message, isError = false) {
+      const clamped = Math.max(0, Math.min(100, value));
+      progressFill.style.width = `${clamped}%`;
+      progress.setAttribute('aria-valuenow', String(clamped));
+      statusText.textContent = message;
+      statusText.classList.toggle('error', isError);
+    }
+
+    function resetResult() {
+      revokeUrl(currentDownloadUrl);
+      currentDownloadUrl = null;
+      processedPlayer.removeAttribute('src');
+      processedPlayer.load();
+      downloadBtn.disabled = true;
+    }
+
+    function ensureAudioContext() {
+      if (!audioContext) {
+        const AudioCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtor) {
+          throw new Error('Ваш браузер не поддерживает Web Audio API.');
+        }
+        audioContext = new AudioCtor({ sampleRate: OUTPUT_RATE });
+      }
+
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    }
+
+    function isAudioFile(file) {
+      if (!file) return false;
+      if (file.type && file.type.startsWith('audio/')) return true;
+      const ext = file.name?.split('.').pop()?.toLowerCase();
+      return ['wav', 'mp3', 'ogg', 'flac', 'm4a', 'aac'].includes(ext);
+    }
 
     chooseBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', (event) => {
       const file = event.target.files && event.target.files[0];
-      if (file) {
-        loadAudioFile(file);
-      }
+      fileInput.value = '';
+      if (file) loadAudioFile(file);
     });
 
     ['dragenter', 'dragover'].forEach((eventName) => {
@@ -720,9 +721,7 @@
 
     dropZone.addEventListener('drop', (event) => {
       const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
-      if (file) {
-        loadAudioFile(file);
-      }
+      if (file) loadAudioFile(file);
     });
 
     dropZone.addEventListener('keydown', (event) => {
@@ -732,78 +731,58 @@
       }
     });
 
-    function ensureAudioContext() {
-      if (!audioContext) {
-        const AudioCtor = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtor) {
-          throw new Error('Ваш браузер не поддерживает Web Audio API.');
-        }
-        audioContext = new AudioCtor({ sampleRate: 96000 });
-      }
-
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-    }
-
-    function isAudioFile(file) {
-      if (!file) return false;
-      if (file.type && file.type.startsWith('audio/')) return true;
-      const ext = file.name?.split('.').pop()?.toLowerCase();
-      return ['wav', 'mp3', 'ogg', 'flac', 'm4a', 'aac'].includes(ext);
-    }
-
-    function updateProgress(value, message) {
-      progressFill.style.width = `${value}%`;
-      statusText.textContent = message;
-    }
-
-    function revokeUrl(url) {
-      if (url) {
-        URL.revokeObjectURL(url);
-      }
-    }
-
     async function loadAudioFile(file) {
+      const token = ++loadSequence;
+      resetResult();
+      originalBuffer = null;
+      processBtn.disabled = true;
+
       if (!isAudioFile(file)) {
-        updateProgress(0, 'Ошибка: поддерживаются только аудиофайлы (.wav, .mp3, .ogg, .flac, .aac)');
+        setStatus(0, 'Ошибка: поддерживаются только аудиофайлы (.wav, .mp3, .ogg, .flac, .aac)', true);
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        setStatus(0, 'Ошибка: максимальный размер файла — 100 МБ', true);
         return;
       }
 
       currentFileName = file.name;
       fileName.textContent = file.name;
-      fileMeta.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+      fileMeta.textContent = formatSize(file.size);
       fileInfo.classList.add('visible');
-      processBtn.disabled = true;
-      updateProgress(12, 'Загрузка файла...');
+      setStatus(12, 'Загрузка файла...');
 
       try {
         ensureAudioContext();
 
         const arrayBuffer = await file.arrayBuffer();
         const decoded = await audioContext.decodeAudioData(arrayBuffer.slice(0));
+
+        if (token !== loadSequence) return;
+        if (decoded.duration > MAX_DURATION) {
+          throw new Error('Максимальная длительность файла — 20 минут.');
+        }
+
         originalBuffer = decoded;
 
-        updateProgress(58, 'Аудиофайл готов к обработке');
-
-        trackInfoCard.style.display = 'block';
+        trackInfoCard.hidden = false;
         infoDuration.textContent = `${decoded.duration.toFixed(2)} сек`;
         infoChannels.textContent = decoded.numberOfChannels;
-        infoSampleRate.textContent = `${decoded.sampleRate} Hz`;
-        infoSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+        infoSampleRate.textContent = `${decoded.sampleRate.toLocaleString('ru-RU')} Hz`;
+        infoSize.textContent = formatSize(file.size);
 
-        const originalBlob = audioBufferToWav(decoded);
         revokeUrl(currentOriginalUrl);
-        currentOriginalUrl = URL.createObjectURL(originalBlob);
+        currentOriginalUrl = URL.createObjectURL(audioBufferToWav(decoded, decoded.sampleRate));
         originalPlayer.src = currentOriginalUrl;
-        playerCard.style.display = 'block';
-        processedPlayer.removeAttribute('src');
+        originalPlayer.load();
 
+        playerCard.hidden = false;
         processBtn.disabled = false;
-        updateProgress(100, 'Готово — можно обработать вокал');
+        setStatus(100, 'Готово — можно обработать вокал');
       } catch (error) {
         console.error(error);
-        updateProgress(0, 'Ошибка загрузки: ' + (error && error.message ? error.message : 'Не удалось декодировать аудиофайл'));
+        setStatus(0, `Ошибка загрузки: ${error && error.message ? error.message : 'не удалось декодировать аудиофайл'}`, true);
       }
     }
 
@@ -814,66 +793,100 @@
       }
 
       processBtn.disabled = true;
-      updateProgress(18, 'Обработка вокала...');
+      downloadBtn.disabled = true;
+      setStatus(10, 'Подготовка обработки...');
 
       try {
-        const processed = processVocal(originalBuffer);
-        processedBuffer = processed;
+        const result = await processVocal(originalBuffer, (progressValue, progressMessage) => {
+          setStatus(progressValue, progressMessage);
+        });
 
-        const outputBlob = audioBufferToWav(processed);
+        const wavBlob = audioBufferToWav(result, OUTPUT_RATE);
         revokeUrl(currentDownloadUrl);
-        currentDownloadUrl = URL.createObjectURL(outputBlob);
+        currentDownloadUrl = URL.createObjectURL(wavBlob);
         processedPlayer.src = currentDownloadUrl;
+        processedPlayer.load();
 
-        updateProgress(100, 'Готово! ✓');
-
-        downloadBtn.onclick = () => {
-          const a = document.createElement('a');
-          a.href = currentDownloadUrl;
-          const safeName = currentFileName.replace(/\.[^/.]+$/, '') || 'invoise_track';
-          a.download = `invoise_${safeName}_processed.wav`;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-        };
+        downloadBtn.disabled = false;
+        setStatus(100, 'Готово! ✓');
       } catch (error) {
         console.error(error);
-        updateProgress(0, 'Ошибка обработки: ' + (error && error.message ? error.message : 'Не удалось обработать файл'));
+        setStatus(0, `Ошибка обработки: ${error && error.message ? error.message : 'не удалось обработать файл'}`, true);
       } finally {
         processBtn.disabled = false;
       }
     });
 
-    function applyHighPass(data, sampleRate, cutoffFreq) {
-      const output = new Float32Array(data.length);
-      const rc = 1 / (cutoffFreq * 2 * Math.PI);
-      const dt = 1 / sampleRate;
-      const alpha = rc / (rc + dt);
+    downloadBtn.addEventListener('click', () => {
+      if (!currentDownloadUrl) return;
 
-      output[0] = data[0] || 0;
-      for (let i = 1; i < data.length; i++) {
-        output[i] = alpha * (output[i - 1] + data[i] - data[i - 1]);
+      const safeBase = (currentFileName.replace(/\.[^/.]+$/, '') || 'invoise_track')
+        .replace(/[^\p{L}\p{N}_-]+/gu, '_');
+
+      const a = document.createElement('a');
+      a.href = currentDownloadUrl;
+      a.download = `invoise_${safeBase}_processed.wav`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    function applyBiquad(data, sampleRate, type, frequency, gainDb = 0, q = 0.707) {
+      const output = new Float32Array(data.length);
+      const gain = Math.pow(10, gainDb / 40);
+      const omega = (2 * Math.PI * frequency) / sampleRate;
+      const sin = Math.sin(omega);
+      const cos = Math.cos(omega);
+      const alpha = sin / (2 * q);
+
+      let b0 = 0;
+      let b1 = 0;
+      let b2 = 0;
+      let a0 = 1;
+      let a1 = 0;
+      let a2 = 0;
+
+      if (type === 'highpass') {
+        b0 = (1 - cos) / 2;
+        b1 = -(1 - cos);
+        b2 = (1 - cos) / 2;
+        a0 = 1 + alpha;
+        a1 = -2 * cos;
+        a2 = 1 - alpha;
+      } else if (type === 'lowshelf') {
+        const sqrtGain = Math.sqrt(gain);
+        const beta = 2 * sqrtGain * alpha;
+        b0 = gain * ((gain + 1) - (gain - 1) * cos + beta);
+        b1 = 2 * gain * ((gain - 1) - (gain + 1) * cos);
+        b2 = gain * ((gain + 1) - (gain - 1) * cos - beta);
+        a0 = (gain + 1) + (gain - 1) * cos + beta;
+        a1 = -2 * ((gain - 1) + (gain + 1) * cos);
+        a2 = (gain + 1) + (gain - 1) * cos - beta;
+      } else if (type === 'highshelf') {
+        const sqrtGain = Math.sqrt(gain);
+        const beta = 2 * sqrtGain * alpha;
+        b0 = gain * ((gain + 1) + (gain - 1) * cos + beta);
+        b1 = -2 * gain * ((gain - 1) + (gain + 1) * cos);
+        b2 = gain * ((gain + 1) + (gain - 1) * cos - beta);
+        a0 = (gain + 1) - (gain - 1) * cos + beta;
+        a1 = 2 * ((gain - 1) - (gain + 1) * cos);
+        a2 = (gain + 1) - (gain - 1) * cos - beta;
       }
-      return output;
-    }
 
-    function applyLowShelf(data, sampleRate, freq, gainDb) {
-      const output = new Float32Array(data.length);
-      const gain = Math.pow(10, gainDb / 20);
-      const K = Math.tan((Math.PI * freq) / sampleRate);
-      const norm = 1 / (1 + K / Math.sqrt(gain) + K * K);
+      const b0Norm = b0 / a0;
+      const b1Norm = b1 / a0;
+      const b2Norm = b2 / a0;
+      const a1Norm = a1 / a0;
+      const a2Norm = a2 / a0;
 
-      const b0 = K * K * norm;
-      const b1 = 2 * b0;
-      const b2 = b0;
-      const a1 = 2 * (K * K - 1) * norm;
-      const a2 = (1 - K / Math.sqrt(gain) + K * K) * norm;
-
-      let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+      let x1 = 0;
+      let x2 = 0;
+      let y1 = 0;
+      let y2 = 0;
 
       for (let i = 0; i < data.length; i++) {
         const x = data[i];
-        const y = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
+        const y = b0Norm * x + b1Norm * x1 + b2Norm * x2 - a1Norm * y1 - a2Norm * y2;
         output[i] = y;
         x2 = x1;
         x1 = x;
@@ -884,52 +897,26 @@
       return output;
     }
 
-    function applyHighShelf(data, sampleRate, freq, gainDb) {
+    function softCompress(data, thresholdDb = -18, ratio = 3.2, attackSec = 0.012, releaseSec = 0.18, sampleRate = 44100) {
       const output = new Float32Array(data.length);
-      const gain = Math.pow(10, gainDb / 20);
-      const K = Math.tan((Math.PI * freq) / sampleRate);
-      const norm = 1 / (1 + Math.sqrt(gain) * K + K * K);
-
-      const b0 = K * K * norm;
-      const b1 = -2 * b0;
-      const b2 = b0;
-      const a1 = 2 * (K * K - 1) * norm;
-      const a2 = (1 - Math.sqrt(gain) * K + K * K) * norm;
-
-      let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-
-      for (let i = 0; i < data.length; i++) {
-        const x = data[i];
-        const y = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
-        output[i] = y;
-        x2 = x1;
-        x1 = x;
-        y2 = y1;
-        y1 = y;
-      }
-
-      return output;
-    }
-
-    function compress(data, thresholdDb, ratio, attackSec, releaseSec, sampleRate) {
-      const output = new Float32Array(data.length);
-      let envelope = 0;
       const threshold = Math.pow(10, thresholdDb / 20);
       const attackAlpha = Math.exp(-1 / (attackSec * sampleRate));
       const releaseAlpha = Math.exp(-1 / (releaseSec * sampleRate));
 
+      let envelope = 0;
+
       for (let i = 0; i < data.length; i++) {
         const abs = Math.abs(data[i]);
-        const target = abs > envelope ? abs : envelope;
-        envelope = abs > envelope ? attackAlpha * (envelope - abs) + abs : releaseAlpha * (envelope - abs) + abs;
+        const alpha = abs > envelope ? attackAlpha : releaseAlpha;
+        envelope = alpha * envelope + (1 - alpha) * abs;
 
         let gain = 1;
         if (envelope > threshold) {
           const excess = envelope / threshold;
           const dbExcess = 20 * Math.log10(excess);
-          const compressedDb = dbExcess / ratio;
-          const compressedLinear = Math.pow(10, compressedDb / 20);
-          gain = compressedLinear / excess;
+          const compensatedDb = dbExcess / ratio;
+          const compensatedLinear = Math.pow(10, compensatedDb / 20);
+          gain = compensatedLinear / excess;
         }
 
         output[i] = data[i] * gain;
@@ -938,214 +925,200 @@
       return output;
     }
 
-    function saturate(data, drive) {
+    function softSaturation(data, drive = 0.7) {
       const output = new Float32Array(data.length);
+      const limit = Math.tanh(1 + drive);
       for (let i = 0; i < data.length; i++) {
         const sample = data[i] * (1 + drive);
-        output[i] = Math.tanh(sample);
+        output[i] = Math.tanh(sample) / limit;
       }
       return output;
     }
 
-    function stereoWiden(left, right, amount) {
+    function stereoSpread(left, right, amount = 0.18) {
       const outL = new Float32Array(left.length);
       const outR = new Float32Array(right.length);
-      const a = Math.max(0, Math.min(1, Math.abs(amount)));
-      const mix = amount >= 0 ? 1 - a : 1 - a;
 
       for (let i = 0; i < left.length; i++) {
         const l = left[i];
         const r = right[i];
-        outL[i] = l * mix + r * a;
-        outR[i] = r * mix + l * a;
+        const mid = (l + r) * 0.5;
+        const diff = (l - r) * 0.5;
+        outL[i] = mid + diff * (1 + amount);
+        outR[i] = mid - diff * (1 + amount);
       }
 
       return { left: outL, right: outR };
     }
 
-    function addReverb(data, sampleRate, wetAmount) {
+    function shortAmbience(data, sampleRate, wet = 0.1) {
       const output = new Float32Array(data.length);
-      const delayTimes = [0.021, 0.034, 0.047, 0.063];
-      const buffers = delayTimes.map((dt) => new Float32Array(Math.floor(sampleRate * dt) + 32));
-      const writePos = [0, 0, 0, 0];
+      const delayTimes = [0.021, 0.034, 0.047, 0.063].map((t) => Math.max(1, Math.floor(sampleRate * t)));
+      const buffers = delayTimes.map((d) => new Float32Array(d + 16));
+      const writePos = delayTimes.map(() => 0);
 
       for (let i = 0; i < data.length; i++) {
         let sum = 0;
 
         for (let j = 0; j < buffers.length; j++) {
           const buffer = buffers[j];
-          const readPos = (writePos[j] - 1 + buffer.length) % buffer.length;
-          const delayed = buffer[readPos] || 0;
-          buffer[writePos[j]] = data[i] * 0.52 + delayed * 0.28;
+          const pos = writePos[j];
+          const readIndex = (pos - 1 + buffer.length) % buffer.length;
+          const delayed = buffer[readIndex] || 0;
+          buffer[pos] = data[i] * 0.55 + delayed * 0.25;
           sum += delayed;
-          writePos[j] = (writePos[j] + 1) % buffer.length;
+          writePos[j] = (pos + 1) % buffer.length;
         }
 
         const reverb = (sum / buffers.length) * 0.7;
-        output[i] = data[i] * (1 - wetAmount) + reverb * wetAmount;
+        output[i] = data[i] * (1 - wet) + reverb * wet;
       }
 
       return output;
     }
 
-    function addDelay(data, sampleRate, delaySec, feedbackAmount, mixAmount) {
-      const output = new Float32Array(data.length);
-      const delaySamples = Math.max(1, Math.floor(sampleRate * delaySec));
-      const buffer = new Float32Array(delaySamples + 256);
-      let writePos = 0;
+    async function processVocal(audioBuffer, onProgress) {
+      const sampleRate = audioBuffer.sampleRate;
+      const length = audioBuffer.length;
+      const channels = audioBuffer.numberOfChannels;
 
-      for (let i = 0; i < data.length; i++) {
-        const readPos = (writePos - delaySamples + buffer.length) % buffer.length;
-        const delayed = buffer[readPos] || 0;
-        buffer[writePos] = data[i] * 0.85 + delayed * feedbackAmount;
-        output[i] = data[i] + delayed * mixAmount;
-        writePos = (writePos + 1) % buffer.length;
+      const left = audioBuffer.getChannelData(0).slice();
+      const right = channels > 1 ? audioBuffer.getChannelData(1).slice() : left.slice();
+
+      let leftProcessed = left;
+      let rightProcessed = right;
+
+      const steps = [
+        ['HP', () => {
+          leftProcessed = applyBiquad(leftProcessed, sampleRate, 'highpass', 85, 0, 0.707);
+          rightProcessed = applyBiquad(rightProcessed, sampleRate, 'highpass', 85, 0, 0.707);
+        }],
+        ['Low shelf', () => {
+          leftProcessed = applyBiquad(leftProcessed, sampleRate, 'lowshelf', 180, 2.2, 0.8);
+          rightProcessed = applyBiquad(rightProcessed, sampleRate, 'lowshelf', 180, 2.2, 0.8);
+        }],
+        ['High shelf', () => {
+          leftProcessed = applyBiquad(leftProcessed, sampleRate, 'highshelf', 9000, 1.3, 0.9);
+          rightProcessed = applyBiquad(rightProcessed, sampleRate, 'highshelf', 9000, 1.3, 0.9);
+        }],
+        ['Compression', () => {
+          leftProcessed = softCompress(leftProcessed, -18, 3.2, 0.012, 0.18, sampleRate);
+          rightProcessed = softCompress(rightProcessed, -18, 3.2, 0.012, 0.18, sampleRate);
+        }],
+        ['Saturation', () => {
+          leftProcessed = softSaturation(leftProcessed, 0.7);
+          rightProcessed = softSaturation(rightProcessed, 0.7);
+        }]
+      ];
+
+      const totalSteps = steps.length;
+      for (let index = 0; index < totalSteps; index++) {
+        steps[index][1]();
+        const progressValue = 14 + ((index + 1) / totalSteps) * 68;
+        if (onProgress) onProgress(progressValue, `Обработка вокала... ${Math.round(progressValue)}%`);
+        await new Promise((resolve) => requestAnimationFrame(resolve));
       }
 
-      return output;
-    }
+      const spread = stereoSpread(leftProcessed, rightProcessed, 0.18);
+      leftProcessed = shortAmbience(spread.left, sampleRate, 0.08);
+      rightProcessed = shortAmbience(spread.right, sampleRate, 0.08);
 
-    function normalizeChannel(data) {
       let peak = 0;
-      for (let i = 0; i < data.length; i++) {
-        const abs = Math.abs(data[i]);
-        if (abs > peak) peak = abs;
+      for (let i = 0; i < length; i++) {
+        peak = Math.max(peak, Math.abs(leftProcessed[i]), Math.abs(rightProcessed[i]));
       }
 
-      if (peak === 0 || peak >= 1) return data;
+      const gain = peak > 0 ? Math.min(1, 0.95 / peak) : 1;
+      const result = new AudioBuffer({ length, numberOfChannels: 2, sampleRate });
 
-      const scale = 0.94 / peak;
-      const out = new Float32Array(data.length);
-      for (let i = 0; i < data.length; i++) {
-        out[i] = data[i] * scale;
-      }
-      return out;
-    }
-
-    function resampleChannel(channel, fromRate, toRate) {
-      if (fromRate === toRate) return channel.slice();
-      const ratio = toRate / fromRate;
-      const length = Math.max(1, Math.ceil(channel.length * ratio));
-      const out = new Float32Array(length);
+      const leftOut = result.getChannelData(0);
+      const rightOut = result.getChannelData(1);
 
       for (let i = 0; i < length; i++) {
-        const sourceIndex = i / ratio;
-        const index = Math.floor(sourceIndex);
-        const frac = sourceIndex - index;
+        leftOut[i] = leftProcessed[i] * gain;
+        rightOut[i] = rightProcessed[i] * gain;
+      }
 
-        if (index + 1 < channel.length) {
-          out[i] = channel[index] * (1 - frac) + channel[index + 1] * frac;
-        } else {
-          out[i] = channel[Math.min(index, channel.length - 1)] || 0;
-        }
+      if (onProgress) onProgress(100, 'Готово! ✓');
+      return result;
+    }
+
+    function resampleChannel(channel, fromRate, toRate, outLength) {
+      if (fromRate === toRate) {
+        const copy = new Float32Array(channel.length);
+        copy.set(channel);
+        return copy.slice(0, outLength);
+      }
+
+      const out = new Float32Array(outLength);
+      const ratio = (channel.length - 1) / Math.max(1, outLength - 1);
+
+      for (let i = 0; i < outLength; i++) {
+        const pos = i * ratio;
+        const base = Math.floor(pos);
+        const frac = pos - base;
+        const a = channel[base] || 0;
+        const b = channel[Math.min(base + 1, channel.length - 1)] || 0;
+        out[i] = a * (1 - frac) + b * frac;
       }
 
       return out;
     }
 
-    function processVocal(inputBuffer) {
-      const targetSampleRate = 96000;
-      const sourceRate = inputBuffer.sampleRate;
-      const channelCount = inputBuffer.numberOfChannels;
-      const channels = [];
+    function audioBufferToWav(buffer, targetSampleRate = buffer.sampleRate) {
+      const numberOfChannels = Math.min(2, buffer.numberOfChannels || 1);
+      const outputLength = Math.max(1, Math.round((buffer.length / buffer.sampleRate) * targetSampleRate));
 
-      for (let ch = 0; ch < channelCount; ch++) {
-        channels.push(resampleChannel(inputBuffer.getChannelData(ch), sourceRate, targetSampleRate));
-      }
+      const leftSource = buffer.getChannelData(0);
+      const rightSource = numberOfChannels > 1 ? buffer.getChannelData(1) : leftSource;
 
-      const baseLength = Math.max(...channels.map((ch) => ch.length));
-      const left = new Float32Array(baseLength);
-      const right = new Float32Array(baseLength);
+      const left = resampleChannel(leftSource, buffer.sampleRate, targetSampleRate, outputLength);
+      const right = resampleChannel(rightSource, buffer.sampleRate, targetSampleRate, outputLength);
 
-      for (let i = 0; i < baseLength; i++) {
-        const l = channels[0] ? channels[0][i] || 0 : 0;
-        const r = channels[1] ? channels[1][i] || 0 : l;
-        left[i] = l;
-        right[i] = r;
-      }
+      const bytesPerSample = 4;
+      const blockAlign = numberOfChannels * bytesPerSample;
+      const dataLength = outputLength * blockAlign;
+      const arrayBuffer = new ArrayBuffer(44 + dataLength);
+      const view = new DataView(arrayBuffer);
 
-      let leftProcessed = applyHighPass(left, targetSampleRate, 80);
-      let rightProcessed = applyHighPass(right, targetSampleRate, 80);
+      let offset = 0;
+      const writeString = (str) => {
+        for (let i = 0; i < str.length; i++) {
+          view.setUint8(offset++, str.charCodeAt(i));
+        }
+      };
 
-      leftProcessed = applyLowShelf(leftProcessed, targetSampleRate, 210, 2.2);
-      rightProcessed = applyLowShelf(rightProcessed, targetSampleRate, 210, 2.2);
+      writeString('RIFF');
+      view.setUint32(offset, 36 + dataLength, true); offset += 4;
+      writeString('WAVE');
+      writeString('fmt ');
+      view.setUint32(offset, 16, true); offset += 4;
+      view.setUint16(offset, 3, true); offset += 2; // IEEE float
+      view.setUint16(offset, numberOfChannels, true); offset += 2;
+      view.setUint32(offset, targetSampleRate, true); offset += 4;
+      view.setUint32(offset, targetSampleRate * blockAlign, true); offset += 4;
+      view.setUint16(offset, blockAlign, true); offset += 2;
+      view.setUint16(offset, 32, true); offset += 2;
+      writeString('data');
+      view.setUint32(offset, dataLength, true); offset += 4;
 
-      leftProcessed = applyHighShelf(leftProcessed, targetSampleRate, 9000, 3.0);
-      rightProcessed = applyHighShelf(rightProcessed, targetSampleRate, 9000, 3.0);
-
-      leftProcessed = compress(leftProcessed, -6, 2.8, 0.002, 0.06, targetSampleRate);
-      rightProcessed = compress(rightProcessed, -6, 2.8, 0.002, 0.06, targetSampleRate);
-
-      leftProcessed = saturate(leftProcessed, 0.12);
-      rightProcessed = saturate(rightProcessed, 0.12);
-
-      const widened = stereoWiden(leftProcessed, rightProcessed, 0.18);
-      leftProcessed = widened.left;
-      rightProcessed = widened.right;
-
-      leftProcessed = addReverb(leftProcessed, targetSampleRate, 0.24);
-      rightProcessed = addReverb(rightProcessed, targetSampleRate, 0.24);
-
-      leftProcessed = addDelay(leftProcessed, targetSampleRate, 0.022, 0.22, 0.18);
-      rightProcessed = addDelay(rightProcessed, targetSampleRate, 0.024, 0.24, 0.2);
-
-      const finalLeft = normalizeChannel(leftProcessed);
-      const finalRight = normalizeChannel(rightProcessed);
-
-      const output = audioContext.createBuffer(2, finalLeft.length, targetSampleRate);
-      output.copyToChannel(finalLeft, 0);
-      output.copyToChannel(finalRight, 1);
-      return output;
-    }
-
-    function audioBufferToWav(audioBuffer) {
-      const numChannels = audioBuffer.numberOfChannels;
-      const sampleRate = audioBuffer.sampleRate;
-      const format = 1;
-      const bitDepth = 16;
-      const bytesPerSample = bitDepth / 8;
-      const blockAlign = numChannels * bytesPerSample;
-      const dataLength = audioBuffer.length * blockAlign;
-      const buffer = new ArrayBuffer(44 + dataLength);
-      const view = new DataView(buffer);
-
-      function writeString(offset, string) {
-        for (let i = 0; i < string.length; i++) {
-          view.setUint8(offset + i, string.charCodeAt(i));
+      for (let i = 0; i < outputLength; i++) {
+        view.setFloat32(offset, left[i], true); offset += 4;
+        if (numberOfChannels > 1) {
+          view.setFloat32(offset, right[i], true); offset += 4;
         }
       }
 
-      writeString(0, 'RIFF');
-      view.setUint32(4, 36 + dataLength, true);
-      writeString(8, 'WAVE');
-      writeString(12, 'fmt ');
-      view.setUint32(16, 16, true);
-      view.setUint16(20, format, true);
-      view.setUint16(22, numChannels, true);
-      view.setUint32(24, sampleRate, true);
-      view.setUint32(28, sampleRate * blockAlign, true);
-      view.setUint16(32, blockAlign, true);
-      view.setUint16(34, bitDepth, true);
-      writeString(36, 'data');
-      view.setUint32(40, dataLength, true);
-
-      let offset = 44;
-      const channelData = [];
-      for (let ch = 0; ch < numChannels; ch++) {
-        channelData.push(audioBuffer.getChannelData(ch));
-      }
-
-      for (let i = 0; i < audioBuffer.length; i++) {
-        for (let ch = 0; ch < numChannels; ch++) {
-          let sample = Math.max(-1, Math.min(1, channelData[ch][i]));
-          sample = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
-          view.setInt16(offset, sample, true);
-          offset += 2;
-        }
-      }
-
-      return new Blob([buffer], { type: 'audio/wav' });
+      return new Blob([arrayBuffer], { type: 'audio/wav' });
     }
+
+    window.addEventListener('beforeunload', () => {
+      revokeUrl(currentDownloadUrl);
+      revokeUrl(currentOriginalUrl);
+      if (audioContext && typeof audioContext.close === 'function') {
+        audioContext.close().catch(() => {});
+      }
+    });
   </script>
 </body>
 </html>
