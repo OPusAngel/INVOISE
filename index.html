@@ -10,39 +10,52 @@
             --surface: #141414;
             --border: #2a2a2a;
             --accent: #76a1f8; /* Gold */
-            --accent-hover: #d4af37; 
+            --accent-hover: #d4af37;
             --text: #e0e0e0;
             --text-muted: #888;
             --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        
+
         body {
             background-color: var(--bg);
             color: var(--text);
             font-family: var(--font-main);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow-x: hidden;
+            padding: 0.85rem 0 3.55rem;   /* снизу — место под прибитый к низу футер */
         }
 
         .app-container {
             width: 100%;
             max-width: 600px;
-            padding: 2rem;
+            padding: 0.4rem 2rem 0.6rem;
             text-align: center;
+            transition: opacity 0.42s ease, transform 0.6s cubic-bezier(.2, .8, .2, 1), filter 0.42s ease;
         }
+
+        /* когда открыт экран благодарности — студия уходит в тень */
+        body.grat-open .app-container {
+            opacity: 0;
+            transform: scale(0.972) translateY(-8px);
+            filter: blur(7px);
+            pointer-events: none;
+        }
+        body.grat-open footer { opacity: 0; }
+        body.grat-open { overflow: hidden; }
 
         h1 {
             font-weight: 300;
-            letter-spacing: 4px;
-            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+            margin-bottom: 0.15rem;
             text-transform: uppercase;
-            font-size: 2rem;
+            font-size: 1.5rem;
+            line-height: 1.1;
         }
 
         .brand-name-primary { color: #76a1f8; }
@@ -50,16 +63,16 @@
 
         .brand-logo {
             display: block;
-            width: min(180px, 60vw);
+            width: min(108px, 26vw);
             height: auto;
-            margin: 0 auto 1rem;
+            margin: 0 auto 0.35rem;
         }
-        
+
         .subtitle {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 3rem;
-            letter-spacing: 1px;
+            font-size: 0.68rem;
+            margin-bottom: 1.45rem;
+            letter-spacing: 2px;
         }
 
         /* Drop Zone */
@@ -90,30 +103,239 @@
         .icon-upload { font-size: 2rem; margin-bottom: 1rem; display: block; }
         .file-info { margin-top: 1rem; font-size: 0.85rem; color: var(--accent); display: none; word-break: break-all;}
 
-        /* Controls */
-        .controls {
-            margin-top: 2rem;
+        /* Processor panel */
+        .panel {
+            margin-top: 1.35rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.85rem 1.25rem 0.95rem;
+            text-align: left;
+            display: none;
+        }
+        .panel.active { display: block; }
+
+        .row { margin-bottom: 0.62rem; }
+        .row:last-child { margin-bottom: 0; }
+
+        .row-head {
             display: flex;
-            gap: 1rem;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.3rem;
+        }
+
+        .label {
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .value {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 3px;
+            background: #2a2a2a;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 13px; height: 13px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid #0a0a0a;
+            box-shadow: 0 0 0 1px var(--accent);
+            transition: transform 0.15s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type=range]::-moz-range-thumb {
+            width: 13px; height: 13px; border-radius: 50%;
+            background: var(--accent); border: 2px solid #0a0a0a;
+        }
+        input[type=range]:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        /* Toggle */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px; height: 22px;
+            flex: 0 0 auto;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider-toggle {
+            position: absolute;
+            inset: 0;
+            background: #2a2a2a;
+            border-radius: 22px;
+            transition: background 0.25s;
+            cursor: pointer;
+        }
+        .slider-toggle::before {
+            content: "";
+            position: absolute;
+            width: 16px; height: 16px;
+            left: 3px; top: 3px;
+            background: #777;
+            border-radius: 50%;
+            transition: transform 0.25s, background 0.25s;
+        }
+        .switch input:checked + .slider-toggle { background: rgba(118,161,248,0.25); }
+        .switch input:checked + .slider-toggle::before { transform: translateX(18px); background: var(--accent); }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.78rem;
+        }
+
+        /* Переключатель стереорежима */
+        .mode-seg {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .mode-seg button {
+            flex: 1 1 0;
+            padding: 6px 6px;
+            font-size: 0.64rem;
+            letter-spacing: 1px;
+            border-color: #43434e;
+            color: #9a9a9a;
+        }
+        .mode-seg button:hover:not(:disabled) {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .mode-seg button.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(118, 161, 248, 0.10);
+        }
+        .mode-seg.disabled { opacity: 0.35; pointer-events: none; }
+
+        /* INVOISE AI */
+        button.ai { border-color: #73E6CC; color: #73E6CC; }
+        button.ai:hover:not(:disabled) {
+            border-color: #73E6CC;
+            color: #73E6CC;
+            background: rgba(115, 230, 204, 0.08);
+            box-shadow: 0 4px 15px rgba(115, 230, 204, 0.25);
+        }
+        button.ai.on { background: #73E6CC; color: #062622; font-weight: 600; }
+        button.ai.on:hover:not(:disabled) { background: #8ef0da; color: #062622; }
+
+        /* в режиме INVOISE AI настройки убираются, визуализация остаётся */
+        .panel.ai > .row,
+        .panel.ai > .toggle-row { display: none; }
+        .panel.ai .meters { margin-top: 0; padding-top: 0; border-top: none; }
+
+        /* Meters */
+        .meters {
+            display: flex;
+            gap: 1.25rem;
+            align-items: stretch;
+            margin-top: 0.9rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .scope-wrap {
+            flex: 1 1 auto;
+            background: #0d0d0d;
+            border: 1px solid #1e1e1e;
+            border-radius: 8px;
+            height: 90px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .corr-wrap {
+            flex: 0 0 54px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.4rem;
+        }
+
+        .corr-bar {
+            width: 10px;
+            height: 78px;
+            background: #1a1a1a;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .corr-fill {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 50%;
+            background: var(--accent);
+            transition: height 0.08s linear, background 0.2s;
+        }
+        .corr-zero {
+            position: absolute;
+            left: 0; right: 0;
+            bottom: 50%;
+            height: 1px;
+            background: #3a3a3a;
+        }
+        .corr-label {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+        .corr-value {
+            font-size: 0.7rem;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Buttons */
+        .controls {
+            margin-top: 1.25rem;
+            display: none;                 /* до загрузки файла кнопок нет вообще */
+            gap: 0.9rem;
             justify-content: center;
-            opacity: 0.5;
-            pointer-events: none;
+            flex-wrap: wrap;
             transition: opacity 0.3s;
         }
 
-        .controls.active { opacity: 1; pointer-events: all; }
+        .controls.active { display: flex; }
+
+        /* шаг 1: файл загружен, но ещё не обработан — только «Обработать» */
+        .controls.active:not(.ready) #btnPlay,
+        .controls.active:not(.ready) #btnDownload,
+        .controls.active:not(.ready) #btnAI { display: none; }
+
+        /* шаг 2: «Обработать» больше не нужна — её место занимают остальные */
+        .controls.ready #btnProcess { display: none; }
 
         button {
             background: transparent;
             border: 1px solid var(--accent);
             color: var(--accent);
-            padding: 12px 30px;
-            font-size: 0.9rem;
+            padding: 9px 16px;
+            font-size: 0.74rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             cursor: pointer;
             transition: all 0.3s;
             border-radius: 4px;
+            font-family: inherit;
+            white-space: nowrap;
         }
 
         button.primary {
@@ -122,51 +344,404 @@
             font-weight: 600;
         }
 
-        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); }
+        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(118, 161, 248, 0.2); }
         button.primary:hover:not(:disabled) { background: var(--accent-hover); }
         button:disabled { opacity: 0.3; cursor: not-allowed; transform: none; border-color: #444; color: #666;}
+        /* «Прослушать» — тёплый розовый, чтобы жил в палитре с золотом */
+        button.ghost { border-color: #E39CBC; color: #EDA9C6; }
+        button.ghost:hover:not(:disabled) {
+            border-color: #F7BED6;
+            color: #FFD0E3;
+            box-shadow: 0 4px 18px rgba(227, 156, 188, 0.28);
+        }
+        button.playing {
+            border-color: #F7BED6;
+            color: #FFD6E6;
+            background: rgba(227, 156, 188, 0.12);
+            box-shadow: 0 0 18px rgba(227, 156, 188, 0.22);
+        }
 
         /* Visualizer & Progress */
         .visualizer-container {
-            margin-top: 2rem;
-            height: 80px;
+            margin-top: 1rem;
+            height: 86px;
             width: 100%;
-            background: #0f0f0f;
-            border-radius: 8px;
+            background: radial-gradient(120% 140% at 50% 0%, #16140f 0%, #0b0b0b 60%, #080808 100%);
+            border-radius: 10px;
             overflow: hidden;
             position: relative;
             display: none;
-            border: 1px solid #222;
+            border: 1px solid rgba(212, 175, 55, 0.16);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 10px 30px -18px rgba(0, 0, 0, 0.9);
         }
 
         canvas { width: 100%; height: 100%; display: block; }
+
+        .playhead {
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 0;
+            width: 2px;
+            margin-left: -1px;
+            background: linear-gradient(to bottom, rgba(255, 248, 225, 0.15), #fff6e0 18%, #fff6e0 82%, rgba(255, 248, 225, 0.15));
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.42), 0 0 16px rgba(255, 214, 128, 0.85);
+            opacity: 0;
+            transition: opacity 0.25s;
+            pointer-events: none;
+            z-index: 9;
+        }
+        .playhead::before {
+            content: '';
+            position: absolute;
+            top: -10%; bottom: -10%;
+            left: 50%;
+            width: 54px;
+            transform: translateX(-50%);
+            background: radial-gradient(closest-side, rgba(255, 214, 128, 0.20), rgba(255, 214, 128, 0) 72%);
+            pointer-events: none;
+        }
+        .visualizer-container.playing .playhead { opacity: 1; }
 
         .progress-bar {
             position: absolute;
             bottom: 0; left: 0;
             height: 3px;
-            background: var(--accent);
+            background: linear-gradient(90deg, #b8892a, #f0c85a);
             width: 0%;
             transition: width 0.1s linear;
             z-index: 10;
         }
 
         .status-text {
-            margin-top: 1rem;
-            font-size: 0.8rem;
+            margin-top: 0.45rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
-            min-height: 1.2em;
+        }
+        .status-text:empty { display: none; }
+
+        /* Футер всегда прибит к низу экрана и не всплывает к центру */
+        footer {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            margin: 0;
+            padding: 1rem 1rem 0.7rem;
+            font-size: 0.64rem;
+            line-height: 1.55;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+            text-align: center;
+            background: linear-gradient(to top, var(--bg) 58%, rgba(10, 10, 10, 0));
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 0.3s;
         }
 
-        /* Footer */
-        footer {
-            position: absolute;
-            bottom: 1rem;
-            font-size: 0.7rem;
-            color: #444;
-        }
-        
         a { color: inherit; text-decoration: none; border-bottom: 1px dotted #444; }
+
+        /* ================= экран благодарности ================= */
+
+        .grat {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.6rem 1rem 3rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+        }
+        .grat.on {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.45s ease, visibility 0s;
+        }
+
+        .grat-veil {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(62% 46% at 50% 34%, rgba(212, 175, 55, 0.11) 0%, rgba(8, 8, 8, 0) 72%),
+                radial-gradient(90% 70% at 50% 112%, rgba(118, 161, 248, 0.07) 0%, rgba(8, 8, 8, 0) 62%),
+                #060606;
+            opacity: 0;
+            transform: scale(1.05);
+            transition: opacity 0.5s ease, transform 1.3s cubic-bezier(.2, .8, .2, 1);
+        }
+        .grat.on .grat-veil { opacity: 1; transform: scale(1); }
+
+        .grat-brand {
+            position: relative;
+            text-align: center;
+            margin-bottom: 1.45rem;
+        }
+        .grat-logo {
+            width: 82px;
+            height: auto;
+            display: block;
+            margin: 0 auto 0.3rem;
+            opacity: 0;
+            transform: translateY(-12px) scale(0.88);
+            filter: drop-shadow(0 0 22px rgba(212, 175, 55, 0.3));
+        }
+        .grat.on .grat-logo { animation: gLogo 0.95s cubic-bezier(.16, 1, .3, 1) 0.1s forwards; }
+
+        .grat-wordmark {
+            font-size: 1.42rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            line-height: 1.1;
+            opacity: 0;
+        }
+        .grat.on .grat-wordmark { animation: gFade 0.7s ease-out 0.24s forwards; }
+
+        .grat-tagline {
+            font-size: 0.6rem;
+            letter-spacing: 2.4px;
+            color: var(--text-muted);
+            margin-top: 0.18rem;
+            opacity: 0;
+        }
+        .grat.on .grat-tagline { animation: gFade 0.7s ease-out 0.34s forwards; }
+
+        .grat-card {
+            position: relative;
+            width: min(432px, 92vw);
+            padding: 1.55rem 1.9rem 1.45rem;
+            border-radius: 20px;
+            background: linear-gradient(165deg, #17140f 0%, #101010 45%, #0a0a0a 100%);
+            border: 1px solid rgba(212, 175, 55, 0.17);
+            box-shadow:
+                0 40px 90px -40px #000,
+                inset 0 1px 0 rgba(255, 255, 255, 0.03),
+                0 0 70px -26px rgba(212, 175, 55, 0.35);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(34px) scale(0.94);
+        }
+        .grat.on .grat-card { animation: cardIn 0.9s cubic-bezier(.16, 1, .3, 1) 0.16s forwards; }
+
+        /* бегущий блик по рамке */
+        .grat-card::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(112deg,
+                rgba(212, 175, 55, 0) 18%,
+                rgba(255, 228, 156, 0.65) 48%,
+                rgba(212, 175, 55, 0) 78%);
+            background-size: 260% 100%;
+            background-position: 160% 0;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+                    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                    mask-composite: exclude;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .grat.on .grat-card::after { animation: edgeSweep 3s cubic-bezier(.35, 0, .2, 1) 0.95s both; }
+
+        .grat-cup {
+            width: 64px;
+            height: 64px;
+            display: block;
+            margin: 0 auto 0.55rem;
+            overflow: visible;
+        }
+        .grat-cup path {
+            fill: none;
+            stroke: #d4af37;
+            stroke-width: 1.9;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .grat-cup .cup-body,
+        .grat-cup .cup-handle {
+            stroke-dasharray: 190;
+            stroke-dashoffset: 190;
+        }
+        .grat-cup .cup-steam {
+            stroke: rgba(255, 228, 168, 0.75);
+            stroke-width: 1.7;
+            opacity: 0;
+        }
+        .grat.on .cup-body   { animation: draw 1.1s ease-out 0.55s forwards; }
+        .grat.on .cup-handle { animation: draw 0.7s ease-out 0.95s forwards; }
+        .grat.on .cup-steam.s1 { animation: steam 2.8s ease-in-out 1.35s infinite; }
+        .grat.on .cup-steam.s2 { animation: steam 2.8s ease-in-out 1.65s infinite; }
+        .grat.on .cup-steam.s3 { animation: steam 2.8s ease-in-out 1.95s infinite; }
+
+        .grat-l1, .grat-l2 {
+            font-size: 0.94rem;
+            line-height: 1.5;
+            opacity: 0;
+        }
+        .grat-l1 { color: #dcdcdc; }
+        .grat-l2 { color: #9b9b9b; margin-top: 0.12rem; }
+        .grat.on .grat-l1 { animation: gFade 0.75s ease-out 0.72s forwards; }
+        .grat.on .grat-l2 { animation: gFade 0.75s ease-out 0.86s forwards; }
+
+        .grat-phone {
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            letter-spacing: 1.4px;
+            color: #E8C25C;
+            border: 0;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.25s, text-shadow 0.25s;
+        }
+        .grat-phone:hover { color: #FFDD84; text-shadow: 0 0 22px rgba(232, 194, 92, 0.55); }
+        .grat-phone span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(7px);
+        }
+        .grat.on .grat-phone span {
+            animation: charIn 0.4s cubic-bezier(.2, .9, .2, 1) forwards;
+            animation-delay: calc(1s + var(--i) * 40ms);
+        }
+
+        .grat-qr-wrap {
+            margin-top: 1.15rem;
+            display: flex;
+            justify-content: center;
+        }
+        .grat-qr {
+            position: relative;
+            width: 172px;
+            height: 172px;
+            padding: 9px;
+            border-radius: 13px;
+            background: #fff;
+            box-shadow: 0 20px 44px -20px #000, 0 0 0 1px rgba(212, 175, 55, 0.4);
+            clip-path: circle(0% at 50% 50%);
+            opacity: 0;
+        }
+        .grat.on .grat-qr { animation: qrIn 0.9s cubic-bezier(.2, .9, .2, 1) 1.2s forwards; }
+        .grat-qr canvas { width: 100%; height: 100%; display: block; }
+        .grat-qr img { width: 100%; height: 100%; display: block; object-fit: contain; }
+
+        .grat-qr::after {
+            content: '';
+            position: absolute;
+            left: 8%; right: 8%;
+            top: 4%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0), #d4af37, rgba(212, 175, 55, 0));
+            filter: blur(1px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .grat.on .grat-qr::after { animation: scan 1.6s cubic-bezier(.4, 0, .2, 1) 1.95s both; }
+
+        .grat-qr-note {
+            margin-top: 0.7rem;
+            font-size: 0.62rem;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: #6a6a6a;
+            opacity: 0;
+        }
+        .grat.on .grat-qr-note { animation: gFade 0.6s ease-out 2.05s forwards; }
+
+        .grat-back {
+            position: relative;
+            margin-top: 1.4rem;
+            background: none;
+            border: 0;
+            color: #6b6b6b;
+            font-size: 0.7rem;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            cursor: pointer;
+            opacity: 0;
+            transition: color 0.25s;
+        }
+        .grat-back:hover { color: #E8C25C; box-shadow: none; transform: none; }
+        .grat.on .grat-back { animation: gFade 0.7s ease-out 2.25s forwards; }
+
+        @keyframes gLogo {
+            from { opacity: 0; transform: translateY(-12px) scale(0.88); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes gFade {
+            from { opacity: 0; transform: translateY(9px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes cardIn {
+            0%   { opacity: 0; transform: translateY(34px) scale(0.94); filter: blur(9px); }
+            55%  { opacity: 1; filter: blur(0); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes edgeSweep {
+            0%   { opacity: 0; background-position: 160% 0; }
+            12%  { opacity: 1; }
+            72%  { opacity: 0.85; }
+            100% { opacity: 0.22; background-position: -60% 0; }
+        }
+        @keyframes qrIn {
+            0%   { clip-path: circle(0% at 50% 50%); transform: scale(0.9) rotate(-5deg); opacity: 0; }
+            60%  { opacity: 1; }
+            100% { clip-path: circle(78% at 50% 50%); transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes scan {
+            0%   { top: 4%; opacity: 0; }
+            14%  { opacity: 0.95; }
+            86%  { opacity: 0.95; }
+            100% { top: 93%; opacity: 0; }
+        }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+        @keyframes steam {
+            0%   { opacity: 0; transform: translateY(4px); }
+            25%  { opacity: 0.85; }
+            70%  { opacity: 0.25; }
+            100% { opacity: 0; transform: translateY(-9px); }
+        }
+        @keyframes charIn {
+            from { opacity: 0; transform: translateY(7px); filter: blur(3px); }
+            to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        /* большие мониторы: карточка не теряется на просторе */
+        @media (min-width: 1600px) {
+            .grat-card { width: 478px; padding: 1.95rem 2.2rem 1.8rem; }
+            .grat-qr { width: 200px; height: 200px; }
+            .grat-l1, .grat-l2 { font-size: 1.02rem; }
+            .grat-phone { font-size: 1.34rem; }
+            .grat-cup { width: 72px; height: 72px; }
+            .grat-logo { width: 96px; }
+            .grat-wordmark { font-size: 1.62rem; }
+            .grat-tagline { font-size: 0.66rem; }
+            .grat-brand { margin-bottom: 1.7rem; }
+        }
+
+        /* низкие экраны (ноутбуки 720–760 px): поджимаем по вертикали, чтобы всё влезло без скролла */
+        @media (max-height: 760px) {
+            body { padding: 0.5rem 0 3.1rem; }
+            .brand-logo { width: min(86px, 22vw); margin-bottom: 0.25rem; }
+            h1 { font-size: 1.3rem; margin-bottom: 0.1rem; }
+            .subtitle { font-size: 0.62rem; margin-bottom: 1.05rem; }
+            .panel { margin-top: 1rem; padding: 0.7rem 1.15rem 0.75rem; }
+            .row { margin-bottom: 0.48rem; }
+            .row-head { margin-bottom: 0.22rem; }
+            .meters { margin-top: 0.65rem; padding-top: 0.6rem; gap: 1rem; }
+            .scope-wrap { height: 72px; }
+            .controls { margin-top: 0.85rem; }
+            .visualizer-container { margin-top: 0.6rem; height: 72px; }
+            .status-text { margin-top: 0.3rem; }
+            footer { padding: 0.8rem 1rem 0.55rem; }
+            .grat-card { padding: 1.15rem 1.5rem 1.1rem; }
+            .grat-cup { width: 50px; height: 50px; margin-bottom: 0.3rem; }
+            .grat-qr { width: 148px; height: 148px; }
+            .grat-brand { margin-bottom: 1rem; }
+            .grat-logo { width: 66px; }
+            .grat-back { margin-top: 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -177,132 +752,1165 @@
     <div class="subtitle">PRO VOCAL STUDIO</div>
 
     <div class="drop-zone" id="dropZone">
-        <input type="file" id="fileInput" accept="audio/*">
+        <input type="file" id="fileInput" accept="audio/*,video/*,.mp3,.wav,.flac,.m4a,.aac,.ogg,.opus,.mp4,.mov,.m4v,.avi,.mkv,.webm">
         <span class="icon-upload">🎙️</span>
-        <div>Перетащите WAV/MP3 или кликните</div>
+        <div>Перетащите аудио / видео файл или жмякните</div>
         <div class="file-info" id="fileName"></div>
+    </div>
+
+    <div class="panel" id="panel">
+        <div class="row">
+            <div class="row-head">
+                <span class="label">Width</span>
+                <span class="value" id="widthVal">0.0 %</span>
+            </div>
+            <input type="range" id="width" min="-100" max="100" step="0.2" value="0">
+        </div>
+
+        <div class="toggle-row">
+            <span class="label">StereoZona</span>
+            <label class="switch">
+                <input type="checkbox" id="stereoize">
+                <span class="slider-toggle"></span>
+            </label>
+        </div>
+
+        <div class="row">
+            <div class="row-head">
+                <span class="label">Stereo Mode</span>
+            </div>
+            <div class="mode-seg disabled" id="modeSeg">
+                <button type="button" data-mode="1" class="active">I · Mankai</button>
+                <button type="button" data-mode="2">II · Sakura</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row-head">
+                <span class="label">Stereo deep Amp</span>
+                <span class="value" id="amtVal">6.00 ms</span>
+            </div>
+            <input type="range" id="amt" min="1" max="20" step="0.02" value="6" disabled>
+        </div>
+
+        <div class="meters">
+            <div class="scope-wrap">
+                <canvas id="scope"></canvas>
+            </div>
+            <div class="corr-wrap">
+                <div class="corr-bar">
+                    <div class="corr-fill" id="corrFill"></div>
+                    <div class="corr-zero"></div>
+                </div>
+                <div class="corr-value" id="corrVal">—</div>
+                <div class="corr-label">CORR</div>
+            </div>
+        </div>
     </div>
 
     <div class="controls" id="controls">
         <button id="btnProcess" class="primary">Обработать</button>
+        <button id="btnPlay" class="ghost" disabled>▶ Прослушать</button>
+        <button id="btnAI" class="ai" disabled>INVOISE AI</button>
         <button id="btnDownload" disabled>Скачать WAV</button>
     </div>
 
     <div class="visualizer-container" id="vizContainer">
         <canvas id="waveform"></canvas>
+        <div class="playhead" id="playhead"></div>
         <div class="progress-bar" id="progressBar"></div>
     </div>
-    
+
     <div class="status-text" id="statusText"></div>
 </div>
 
 <footer>
-    INTELLIGENCE VOCAL PROCESSING
+    INTELLIGENCE VOCAL PROCESSING<br>
     Local Processing • No Cloud Upload • Export: 96 kHz 32-bit Float WAV
 </footer>
 
+<div class="grat" id="grat" aria-hidden="true">
+    <div class="grat-veil"></div>
+
+    <div class="grat-brand">
+        <img class="grat-logo" src="invoise.png" alt="Invoise">
+        <div class="grat-wordmark"><span class="brand-name-primary">IN</span><span class="brand-name-secondary">VOISE</span></div>
+        <div class="grat-tagline">PRO VOCAL STUDIO</div>
+    </div>
+
+    <div class="grat-card">
+        <svg class="grat-cup" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="cup-body" d="M11 26.5h31v13.2C42 47.2 35.6 53 27.6 53h-2.2C17.4 53 11 47.2 11 39.7z"/>
+            <path class="cup-handle" d="M42 30.5h4.6a7.8 7.8 0 0 1 0 15.6H42"/>
+            <path class="cup-steam s1" d="M20 19.5c4-3.8-3.6-6.6 0.4-11"/>
+            <path class="cup-steam s2" d="M28.5 18c4-3.8-3.6-6.6 0.4-11"/>
+            <path class="cup-steam s3" d="M37 19.5c4-3.8-3.6-6.6 0.4-11"/>
+        </svg>
+
+        <p class="grat-l1">Если вам пригодилось мое приложение,</p>
+        <p class="grat-l2">можете поблагодарить меня чашекой кофе</p>
+
+        <a class="grat-phone" id="gratPhone" href="tel:+79996370785">+7 (999) 637-07-85</a>
+
+        <div class="grat-qr-wrap">
+            <div class="grat-qr" id="gratQr">
+                <canvas id="qrCanvas" width="308" height="308"></canvas>
+            </div>
+        </div>
+        <div class="grat-qr-note">СБП · по номеру телефона</div>
+    </div>
+
+    <button class="grat-back" id="gratBack">← вернуться в студию</button>
+</div>
+
 <script>
 /**
- * INVOISE CORE ENGINE v2.0
- * Fixed Export Format & DSP Chain Optimization
+ * INVOISE IMAGER ENGINE v3.4
+ *
+ * Алгоритм Ozone Imager 2, восстановленный по самому плагину
+ * (iZOzoneImager2.dll): описания режимов взяты из строк движка,
+ * законы ядра — из его коэффициентов.
+ *
+ * Топология (проверено: при Width = 0 выход совпадает с входом бит в бит):
+ *
+ *   k      = 1 + Width/100                     Width: -100 .. +100 %, дефолт 0
+ *   M      = (L + R) / 2
+ *   S      = (L - R) / 2
+ *   S_out  = k * S + max(0, k - 1) * conv(M, h)
+ *   L_out  = M + S_out
+ *   R_out  = M - S_out
+ *
+ * Mid не корректируется, фильтра ВЧ на side нет.
+ *
+ * Режимы (формулировки из ресурсов DLL, таблица описаний параметров):
+ *
+ *   Mode I  — "Haas Effect-based decorrelation. This mode delays a copy of
+ *              the mid channel and injects it into the side channel."
+ *              То есть h = одиночный отвод на amt мс, усиление 1.
+ *
+ *   Mode II — "Velvet Noise-based decorrelation. This mode convolves the mid
+ *              channel with a series of decaying Velvet Noise impulses to
+ *              generate side channel content."
+ *              Именно этот режим и работает в Ozone Imager 2.
+ *
+ * Ядро Mode II — разреженный FIR из n отводов:
+ *
+ *   n      = floor(amt_ms * 2.1)               максимум 42 отвода при 20 мс
+ *   позиции = round(q[n][k] * amt_ms * sr / 1000)
+ *   уровень = IMG_LEVEL[floor(4k / n)] / 80     то есть 17/80, 11/80, 7/80, 4/80
+ *   знак    = IMG_SIGNS[k]                      фиксированная таблица
+ *
+ * Знаки и огибающая воспроизводятся точно. Позиции отводов плагин считает
+ * псевдослучайно (ГПСЧ внутри DLL, начальное состояние фиксировано), поэтому
+ * таблица IMG_POS снята с его коэффициентов: число отводов, знаки и уровни
+ * совпадают полностью, позиции — с точностью до 1-2 отсчётов.
+ *
+ * --- v3.4 ---
+ *
+ * Оба режима реализованы и переключаются в интерфейсе (Stereo Mode I / II):
+ *
+ *   Mode I  : G0[i] = M[i - amt*sr/1000]                  (одиночная задержка)
+ *   Mode II : G0[i] = sum_k h[k] * M[i - d_k]            (velvet-свёртка)
+ *
+ * и подмешиваются одинаково: S_out = k*S + (k-1)*G0. Это одна функция
+ * computeG0(), общая для экспорта и для прослушивания, поэтому расхождений
+ * между тем, что слышно, и тем, что скачивается, быть не может.
+ *
+ * Прослушивание больше не идёт через ScriptProcessor. Используется тождество
+ *
+ *   M ± (k*S + (k-1)*G0)  ==  L + g * (S + G0),   g = Width/100, k = 1 + g
+ *
+ * поэтому файл играют два зацикленных BufferSource: исходный и side-буфер
+ * P = (S + G0, -S + G0), а Width — это усиление второго. Отсюда нет задержки
+ * обработки, нет пропусков и нет щелчков при вращении ручки.
  */
+
+/* ---------- ядро (общее для оффлайна и realtime) ---------- */
+
+/* Таблицы ядра Stereoize, снятые с коэффициентов плагина.
+   IMG_SIGNS — знаки отводов: одна фиксированная последовательность на 42 значения,
+   любой режим использует её префикс.
+   IMG_LEVEL — четыре ступени огибающей в 1/80 долях.
+   IMG_POS   — нормированные позиции отводов (q * 1e7) для каждого числа отводов n. */
+
+const IMG_SIGNS = '-+++---+++-++----+--+----+-++-+--+++--+---';
+const IMG_LEVEL = [17, 11, 7, 4];
+const IMG_POS = {
+  2: '487065,2431350',
+  3: '177281,575335,7999042',
+  4: '96551,289653,2444963,7040746',
+  5: '25321,183578,1174564,2841683,6515946',
+  6: '0,67088,670880,1523425,3106244,5062976',
+  7: '0,58181,443560,956043,1807034,2802705,7284445',
+  8: '0,51388,314320,651903,1200254,1800981,4172940,6996115',
+  9: '0,45994,244303,493180,842227,1270710,2679860,4281982,6477963',
+  10: '0,41639,208195,365821,657848,930583,1884438,2884281,4221908,8620318',
+  11: '0,38026,190128,304205,532358,738113,1392605,2073558,2953077,5677411,6704623',
+  12: '0,34998,144009,279980,419970,606918,1100805,1575477,2198047,4011122,4676533,9037401',
+  13: '0,32409,129637,204443,359856,505887,878908,1248298,1695772,2976580,3450410,6335916,9737220',
+  14: '0,30183,120731,181096,291985,406032,734664,1013039,1348670,2301465,2650267,4673332,6977981,7145638',
+  15: '0,28238,101886,169427,254141,353213,607354,833257,1115808,1821889,2099041,3579204,5217537,5347450,9903953',
+  16: '0,26532,85624,159193,238789,312621,527901,725380,949504,1495036,1707387,2825002,4048709,4140135,7381051,8982084',
+  17: '0,25018,75053,142758,205264,275193,447882,610609,793305,1243742,1428977,2302218,3213279,3300803,5720732,6851827,9021595',
+  18: '0,23669,71007,123710,189353,252605,402376,539235,694430,1062721,1212640,1901735,2614694,2690976,4534943,5392307,6997028,7723016',
+  19: '0,22456,56292,112282,179651,224564,363891,482965,613188,923268,1051203,1608219,2190029,2246127,3681535,4339636,5561592,6123161,7852620',
+  20: '0,21364,42728,106819,168585,213638,313445,436892,546085,797691,918813,1372236,1847121,1901693,3050796,3565937,4522766,4947753,6298662,8971995',
+  21: '0,20371,40742,101854,130493,187492,285192,376986,493055,719197,812982,1198007,1585223,1638128,2565167,2988981,3746897,4085183,5138562,7216830,8777448',
+  22: '0,19422,38843,97108,116529,174794,264242,347686,446695,639190,710982,1049007,1375380,1425821,2193085,2542809,3156575,3434325,4281276,5924628,7138741,8164416',
+  23: '0,18599,37197,92994,111592,167388,241783,316178,409172,574531,638639,919788,1211131,1252508,1895307,2182490,2690984,2926558,3616879,4933486,5906846,6729461,9902001',
+  24: '0,17842,35683,89208,107050,157068,230192,294484,376494,510364,578163,829734,1067155,1111725,1655916,1898593,2332242,2525001,3097808,4175652,4962521,5617384,8162068,8627786',
+  25: '0,17145,34290,85724,102869,141024,209603,274317,346762,472514,525846,752617,948814,996431,1459342,1665205,2036606,2204347,2686331,3572289,4220038,4772522,6812993,7195910,8440005',
+  26: '0,16500,32999,77616,98997,131996,197994,255824,308610,437319,485164,683158,867953,899305,1306977,1481911,1802002,1942225,2353131,3090722,3643524,4084169,5780509,6090713,7095739,9344888',
+  27: '0,15902,31804,63607,95411,127214,190821,238526,286232,408206,447043,613169,800449,818125,1169805,1337623,1595619,1724620,2079800,2708830,3171802,3551738,4958309,5212791,6034402,7877436,8995981',
+  28: '0,15345,30690,61380,92071,122761,179597,228668,267073,382119,414318,570884,725884,747401,1055857,1192483,1431838,1543894,1844755,2392624,2783910,3113895,4289433,4508934,5196451,6723429,7642780,9932493',
+  29: '0,14827,29653,59307,84071,118614,163141,210910,252055,341015,385495,530509,659025,687025,957207,1087377,1293368,1393819,1652499,2131932,2464792,2739905,3744916,3931069,4529145,5796119,6565568,8470086,9186789',
+  30: '0,14342,28683,57367,76063,113322,143417,200784,236700,322750,359998,494850,613864,635388,879281,988233,1168953,1265070,1490257,1900439,2204566,2442623,3304650,3469602,3965883,5043065,5692795,7282001,7882975,9763375',
+  31: '0,13888,27776,55551,69439,104982,138879,194430,222206,305533,336431,455311,563302,589514,811720,912041,1077132,1154318,1356489,1716046,1975322,2191350,2932077,3078712,3516957,4421324,4983031,6324105,6834880,8407428,9527761',
+  32: '0,13461,26923,52519,67307,95596,134614,183127,214056,286774,319081,424089,527722,547925,744462,842811,981418,1058176,1238541,1559001,1795888,1979002,2622488,2751735,3125993,3916232,4395511,5535808,5969322,7307460,8251203,9235331',
+  33: '0,13061,26122,47931,65304,91426,130608,169790,198846,274277,300398,400572,496310,512305,696617,776437,911412,975270,1136371,1428076,1628341,1796694,2359832,2474468,2806820,3491832,3902517,4882176,5259497,6400226,7196990,8037270,8687444',
+  34: '0,12683,25366,43168,63415,88781,119266,156041,190244,246096,282870,379237,456586,479446,641803,715365,848591,901829,1050225,1305162,1484032,1641293,2133430,2245036,2535520,3129097,3495737,4340421,4662587,5644352,6331837,7045912,7606544,9893463',
+  35: '0,12327,24653,38366,61633,86287,110940,147920,184900,234207,271187,345148,431434,450650,602655,669787,783471,838272,971122,1204013,1368336,1503930,1953194,2036766,2291530,2825743,3142116,3881767,4169378,5014514,5606244,6225330,6708839,8663443,9434571',
+  36: '0,11990,23979,35969,59948,83927,107906,143875,173892,226619,255414,329757,408860,425674,557559,629497,725427,780586,901686,1112703,1259000,1386103,1791379,1866901,2092330,2565972,2840553,3491603,3747007,4491597,4998782,5540780,5960416,7642654,8303378,9238611',
+  37: '0,11671,23341,35012,58354,81695,105037,134898,163390,212692,245085,315110,389057,402028,527802,592639,680825,730105,842933,1037456,1168427,1283845,1640472,1707892,1919273,2336847,2587149,3157768,3384685,4029201,4487000,4955140,5324724,6777153,7349055,8160822,8830002',
+  38: '0,11368,22736,34104,56841,79577,102313,126200,159153,204626,231947,297869,360402,380870,501347,558244,641198,686671,787861,959521,1082334,1190317,1516592,1577977,1765577,2143020,2364690,2882009,3070704,3648256,4049586,4457740,4784006,6051601,6552973,7253280,7828555,9098446',
+  39: '0,11081,22162,33243,55405,77567,99729,121891,155135,199459,221621,288107,343512,362010,467889,519591,605793,646423,738765,900069,1009658,1109387,1406113,1464000,1633916,1962686,2169519,2630011,2803640,3310941,3671687,4029974,4321801,5437348,5870786,6488878,6990010,8093264,9131194',
+  40: '0,10808,21616,32424,54039,75655,97271,118887,149171,189173,215089,271313,327508,345852,443123,493949,575001,608513,696061,848453,947897,1037615,1304579,1353222,1511050,1817983,1994172,2413531,2571338,3026407,3340920,3670559,3924537,4905959,5294008,5830087,6275408,7235183,8145285,9631428',
+  41: '0,10548,21096,31644,52740,73837,94933,116029,140668,179317,202778,253154,315282,326990,421923,470005,534462,575486,657523,788800,890756,968153,1214248,1262315,1399440,1683075,1849521,2221026,2364038,2769562,3054407,3346222,3579464,4446780,4792546,5271921,5659876,6507271,7303106,8599373,9562841',
+  42: '0,10417,20833,31250,52083,72917,93750,114583,135417,177083,197917,239583,302083,312500,406250,437500,510417,541667,625000,750000,843750,906250,1135417,1187500,1312500,1562500,1718750,2052083,2187500,2552083,2812500,3062500,3270833,4052083,4354167,4791667,5135417,5885417,6583333,7729167,8572917,9802083',
+};
+
+function imagerKernel(amtMs, sampleRate) {
+    let n = Math.floor(amtMs * 2.1 + 1e-9);
+    if (n < 2) n = 2;
+    if (n > 42) n = 42;
+
+    const T = amtMs * sampleRate / 1000;
+    const len = Math.max(2, Math.ceil(T) + 2);
+    const dense = new Float32Array(len);
+    const q = IMG_POS[n].split(',');
+
+    for (let k = 0; k < n; k++) {
+        let p = Math.round(Number(q[k]) * 1e-7 * T);
+        if (p < 0) p = 0;
+        if (p >= len) p = len - 1;
+        const lvl = IMG_LEVEL[Math.min(3, (4 * k / n) | 0)] / 80;
+        dense[p] += (IMG_SIGNS.charCodeAt(k) === 45 ? -1 : 1) * lvl;
+    }
+
+    let cnt = 0;
+    for (let i = 0; i < len; i++) if (dense[i] !== 0) cnt++;
+    const idx = new Int32Array(cnt);
+    const val = new Float32Array(cnt);
+    let j = 0;
+    for (let i = 0; i < len; i++) {
+        if (dense[i] !== 0) { idx[j] = i; val[j] = dense[i]; j++; }
+    }
+    return { idx, val };
+}
+
+/* ---------- DSP-ядро (одно и то же для экспорта и для прослушивания) ---------- */
+
+/* G0 — то, что плагин подмешивает в side-канал:
+   Mode II — свёртка mid с разреженным velvet-ядром,
+   Mode I  — просто задержанная копия mid.
+   Дальше обе ветки только смешивают G0 с M/S, поэтому расхождений быть не может. */
+
+async function computeG0(mid, N, sampleRate, mode, amtMs) {
+    const out = new Float32Array(N);
+
+    if (mode === 1) {
+        const d = Math.max(1, Math.round(amtMs * sampleRate / 1000));
+        for (let i = d; i < N; i++) out[i] = mid[i - d];
+        return out;
+    }
+
+    const kern = imagerKernel(amtMs, sampleRate);
+    const idx = kern.idx, val = kern.val;
+    for (let t = 0; t < idx.length; t++) {
+        const d = idx[t], v = val[t];
+        if (d === 0) {
+            for (let i = 0; i < N; i++) out[i] += v * mid[i];
+        } else {
+            for (let i = d; i < N; i++) out[i] += v * mid[i - d];
+        }
+        if ((t & 7) === 7) await new Promise(r => setTimeout(r, 0));
+    }
+    return out;
+}
+
+/* ---------- оффлайн-рендер (для экспорта) ---------- */
+
+async function renderImager(input, sampleRate, p, onProgress) {
+    const N = input.length;
+    const inL = input.getChannelData(0);
+    const inR = input.numberOfChannels > 1 ? input.getChannelData(1) : inL;
+
+    const mid = new Float32Array(N);
+    for (let i = 0; i < N; i++) mid[i] = (inL[i] + inR[i]) * 0.5;
+
+    const k = 1 + p.width / 100;
+    const gen = Math.max(0, k - 1);
+    const useGen = p.stereoize && gen > 0;
+
+    let g0 = null;
+    if (useGen) {
+        if (onProgress) onProgress(4);
+        g0 = await computeG0(mid, N, sampleRate, p.mode, p.amtMs);
+    }
+
+    const outL = new Float32Array(N);
+    const outR = new Float32Array(N);
+
+    for (let i = 0; i < N; i++) {
+        const m = mid[i];
+        let so = k * (inL[i] - inR[i]) * 0.5;
+        if (g0) so += gen * g0[i];
+        outL[i] = m + so;
+        outR[i] = m - so;
+
+        if ((i & 262143) === 0) {
+            if (onProgress) onProgress(10 + Math.round(i / N * 88));
+            await new Promise(r => setTimeout(r, 0));
+        }
+    }
+
+    const out = new AudioBuffer({ length: N, numberOfChannels: 2, sampleRate });
+    out.copyToChannel(outL, 0);
+    out.copyToChannel(outR, 1);
+    if (onProgress) onProgress(100);
+    return out;
+}
+
+/* ---------- side-буфер для прослушивания ----------
+
+   Тождество, на котором держится вся живая ветка:
+
+       M ± (k*S + gen*G0)  ==  L + g * (S + G0),   где g = Width/100, k = 1 + g
+
+   То есть вся обработка сводится к сумме исходного сигнала и одного
+   side-буфера P = (S + G0, -S + G0) с коэффициентом g. Значит, Width можно
+   крутить обычным GainNode — мгновенно, без щелчков и без пересчёта. */
+
+async function buildSideBuffer(p) {
+    const buf = state.audioBuffer;
+    if (!buf) return null;
+
+    const N = buf.length;
+    const sr = buf.sampleRate;
+    const inL = buf.getChannelData(0);
+    const inR = buf.numberOfChannels > 1 ? buf.getChannelData(1) : inL;
+
+    const needGen = p.stereoize && p.width > 0;
+    let g0 = null;
+
+    if (needGen) {
+        let mid = new Float32Array(N);
+        for (let i = 0; i < N; i++) mid[i] = (inL[i] + inR[i]) * 0.5;
+        g0 = await computeG0(mid, N, sr, p.mode, p.amtMs);
+        mid = null;                       /* дальше не нужен, освобождаем */
+    }
+
+    /* P — чисто side-сигнал (P_R = -P_L), поэтому второй канал это просто
+       отрицание первого. Массив G0 переиспользуется под P_L: так пик
+       памяти на длинных файлах меньше на треть. */
+    const PL = g0 || new Float32Array(N);
+    const PR = new Float32Array(N);
+    if (g0) {
+        for (let i = 0; i < N; i++) PL[i] += (inL[i] - inR[i]) * 0.5;
+    } else {
+        for (let i = 0; i < N; i++) PL[i] = (inL[i] - inR[i]) * 0.5;
+    }
+    for (let i = 0; i < N; i++) PR[i] = -PL[i];
+
+    /* Пики при g = -1, -0.5, 0, +0.5, +1. peak(g) выпукла по g, поэтому
+       ломаная по этим точкам всегда не ниже настоящего пика. */
+    const GS = [-1, -0.5, 0, 0.5, 1];
+    const pk = [0, 0, 0, 0, 0];
+    for (let i = 0; i < N; i++) {
+        const l = inL[i], r = inR[i], pl = PL[i], pr = PR[i];
+        for (let u = 0; u < 5; u++) {
+            const g = GS[u];
+            let a = l + g * pl; if (a < 0) a = -a; if (a > pk[u]) pk[u] = a;
+            let b = r + g * pr; if (b < 0) b = -b; if (b > pk[u]) pk[u] = b;
+        }
+    }
+    state.peaks = [
+        { g: -1, p: pk[0] }, { g: -0.5, p: pk[1] }, { g: 0, p: pk[2] },
+        { g: 0.5, p: pk[3] }, { g: 1, p: pk[4] }
+    ];
+
+    const side = new AudioBuffer({ length: N, numberOfChannels: 2, sampleRate: sr });
+    side.copyToChannel(PL, 0);
+    side.copyToChannel(PR, 1);
+    return side;
+}
+
+/* Пик суммы L + g*P по всему файлу — ровно то, что уйдёт в выход.
+   Считается по фактическому сигналу, поэтому запас по уровню ставится
+   один раз и не «дышит» во время воспроизведения. */
+function mixPeak(buf, side, g) {
+    const N = buf.length;
+    const L = buf.getChannelData(0);
+    const R = buf.numberOfChannels > 1 ? buf.getChannelData(1) : L;
+    const PL = side.getChannelData(0);
+    const PR = side.getChannelData(1);
+    let peak = 0;
+    for (let i = 0; i < N; i++) {
+        let a = L[i] + g * PL[i]; if (a < 0) a = -a; if (a > peak) peak = a;
+        let b = R[i] + g * PR[i]; if (b < 0) b = -b; if (b > peak) peak = b;
+    }
+    return peak;
+}
+
+/* ---------- состояние ---------- */
 
 const state = {
     audioBuffer: null,
     processedBuffer: null,
     sourceFileName: '',
     isProcessing: false,
+    playing: false,
+    starting: false,
+    stage: 0,
+    ctx: null,
+    srcA: null,
+    srcB: null,
+    gainA: null,
+    gainB: null,
+    trimGain: null,
+    sideBuffer: null,
+    sideKey: '',
+    aiMode: false,
+    aiBuffer: null,
+    aiBusy: false,
+    peaks: null,
+    startTime: 0,
+    analyserL: null,
+    analyserR: null,
+    rafId: 0
 };
 
-// DOM Elements
+// живые параметры (то, что сейчас реально звучит)
+const live = { width: 0, stereoize: false, amtMs: 6, mode: 2 };
+
+// выбранный в интерфейсе стереорежим: 1 — Haas, 2 — Velvet Noise
+let uiMode = 1;
+
+/* ---------- DOM ---------- */
+
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const fileNameEl = document.getElementById('fileName');
+const panel = document.getElementById('panel');
 const controls = document.getElementById('controls');
 const btnProcess = document.getElementById('btnProcess');
+const btnPlay = document.getElementById('btnPlay');
 const btnDownload = document.getElementById('btnDownload');
+const btnAI = document.getElementById('btnAI');
 const vizContainer = document.getElementById('vizContainer');
+const playhead = document.getElementById('playhead');
 const progressBar = document.getElementById('progressBar');
 const statusText = document.getElementById('statusText');
 const canvas = document.getElementById('waveform');
 const canvasCtx = canvas.getContext('2d');
+const scopeCanvas = document.getElementById('scope');
+const scopeCtx = scopeCanvas.getContext('2d');
+const widthSlider = document.getElementById('width');
+const widthVal = document.getElementById('widthVal');
+const amtSlider = document.getElementById('amt');
+const amtVal = document.getElementById('amtVal');
+const stereoizeToggle = document.getElementById('stereoize');
+const modeSeg = document.getElementById('modeSeg');
+const corrFill = document.getElementById('corrFill');
+const corrVal = document.getElementById('corrVal');
 
-// --- 1. FILE HANDLING ---
+/* ---------- файл ---------- */
 
 ['dragenter', 'dragover'].forEach(e => {
-    dropZone.addEventListener(e, (ev) => {
-        ev.preventDefault();
-        dropZone.classList.add('dragover');
-    });
+    dropZone.addEventListener(e, (ev) => { ev.preventDefault(); dropZone.classList.add('dragover'); });
 });
-
 ['dragleave', 'drop'].forEach(e => {
-    dropZone.addEventListener(e, (ev) => {
-        ev.preventDefault();
-        dropZone.classList.remove('dragover');
-    });
+    dropZone.addEventListener(e, (ev) => { ev.preventDefault(); dropZone.classList.remove('dragover'); });
 });
 
-dropZone.addEventListener('drop', (e) => handleFile(e.dataTransfer.files[0]));
+document.addEventListener('dragover', (e) => e.preventDefault());
+document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-async function handleFile(file) {
-    if (!file || !file.type.startsWith('audio/')) {
-        alert('Пожалуйста, загрузите аудиофайл');
-        return;
-    }
+/* Три шага интерфейса, строго по порядку:
+   0 — файла нет: только окно загрузки;
+   1 — файл загружен: только кнопка «Обработать»;
+   2 — обработано: настройки, прослушивание, INVOISE AI, визуализация. */
+function setStage(n) {
+    state.stage = n;
+    dropZone.style.display = n >= 1 ? 'none' : '';
+    controls.classList.toggle('active', n >= 1);
+    controls.classList.toggle('ready', n >= 2);
+    panel.classList.toggle('active', n >= 2);
+    vizContainer.style.display = n >= 2 ? 'block' : 'none';
+}
 
+async function handleFile(file) {
+    if (!file) return;
+
+    /* формат не важен: mp3, wav, flac, mp4, avi — что угодно, что умеет
+       декодировать браузер. Не вышло — скажем об этом после попытки. */
+    stopPlayback();
     state.sourceFileName = file.name.replace(/\.[^/.]+$/, '');
     fileNameEl.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
     fileNameEl.style.display = 'block';
-    statusText.textContent = 'Декодирование аудио...';
     progressBar.style.width = '0%';
-    
+
     try {
         const arrayBuffer = await file.arrayBuffer();
-        // Use AudioContext for decoding only
         const decodeCtx = new (window.AudioContext || window.webkitAudioContext)();
         state.audioBuffer = await decodeCtx.decodeAudioData(arrayBuffer);
         decodeCtx.close();
-        
-        controls.classList.add('active');
+
         btnDownload.disabled = true;
+        btnPlay.disabled = true;
+        btnAI.disabled = false;
         state.processedBuffer = null;
-        statusText.textContent = 'Готов к обработке';
-        drawWaveform(state.audioBuffer, '#d4af37');
-        vizContainer.style.display = 'block';
+        state.sideBuffer = null;
+        state.sideKey = '';
+        state.aiBuffer = null;
+        setAIModeUi(false);
+        setStage(1);
+        statusText.textContent = 'файл загружен';
     } catch (err) {
         console.error(err);
-        statusText.textContent = 'Ошибка чтения файла. Попробуйте другой.';
+        state.audioBuffer = null;
+        state.processedBuffer = null;
+        state.aiBuffer = null;
+        setAIModeUi(false);
+        setStage(0);
+        statusText.textContent = 'Этот файл декодировать не удалось — попробуйте другой.';
     }
 }
 
-// --- 2. DSP CHAIN (ORBIT 7.1) ---
+/* ---------- параметры ---------- */
 
-async function processAudio() {
+function currentParams() {
+    return {
+        width: parseFloat(widthSlider.value),
+        stereoize: stereoizeToggle.checked,
+        amtMs: parseFloat(amtSlider.value),
+        mode: uiMode
+    };
+}
+
+function pushParams() {
+    const p = currentParams();
+    live.width = p.width;
+    live.stereoize = p.stereoize;
+    live.amtMs = p.amtMs;
+    live.mode = p.mode;
+    if (state.playing) refreshPlayback();
+}
+
+function updateWidthLabel() {
+    const v = parseFloat(widthSlider.value);
+    widthVal.textContent = (v > 0 ? '+' : '') + v.toFixed(1) + ' %';
+}
+function updateAmtLabel() {
+    amtVal.textContent = parseFloat(amtSlider.value).toFixed(2) + ' ms';
+}
+
+function syncModeUi() {
+    modeSeg.classList.toggle('disabled', !stereoizeToggle.checked);
+    const bs = modeSeg.querySelectorAll('button');
+    for (let i = 0; i < bs.length; i++) {
+        bs[i].classList.toggle('active', Number(bs[i].dataset.mode) === uiMode);
+    }
+}
+
+widthSlider.addEventListener('input', () => { updateWidthLabel(); pushParams(); });
+amtSlider.addEventListener('input', () => { updateAmtLabel(); pushParams(); });
+stereoizeToggle.addEventListener('change', () => {
+    amtSlider.disabled = !stereoizeToggle.checked;
+    syncModeUi();
+    pushParams();
+});
+
+modeSeg.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-mode]');
+    if (!b) return;
+    uiMode = Number(b.dataset.mode);
+    syncModeUi();
+    pushParams();
+});
+
+widthSlider.addEventListener('dblclick', () => { widthSlider.value = 0; updateWidthLabel(); pushParams(); });
+amtSlider.addEventListener('dblclick', () => { amtSlider.value = 6; updateAmtLabel(); pushParams(); });
+
+/* ---------- прослушивание по кругу ----------
+
+   Обработки в аудио-колбэке нет вообще. «Программа» — это пара буферов:
+   основной и side. Обычный режим — исходник плюс side с усилением Width/100:
+
+       out = L + g * P,   g = Width/100,   P = (S + G0, -S - G0)
+
+   что тождественно M ± (k*S + gen*G0). INVOISE AI — один готовый буфер,
+   side ему не нужен. Переключение между программами — кроссфейд 30 мс
+   ровно с текущей позиции, поэтому звук не прерывается.
+
+   Отсюда: задержки обработки нет, пропусков нет, щелчков при вращении
+   ручки нет — поток идёт из аудио-потока напрямую в выход. */
+
+const AI_LAYERS = [
+    { mode: 2, amtMs: 8 },   /* Width +100, Velvet, 8.00 ms */
+    { mode: 1, amtMs: 6 },   /* Width +100, Haas,   6.00 ms */
+    { mode: 2, amtMs: 7 }    /* Width +100, Velvet, 7.00 ms */
+];
+const AI_CEIL_DB = -0.03;
+/* три слоя складываются и делятся на три: сумма трёх копий дала бы +9.5 дБ
+   и лимитер работал бы непрерывно. Так mid остаётся на своём уровне,
+   а лимитер ловит только пики. */
+const AI_SUM = 1 / AI_LAYERS.length;
+
+let sideTimer = 0, trimTimer = 0, trimLast = 0;
+
+function sideKeyOf(p) {
+    const gen = p.stereoize && p.width > 0;
+    return gen ? 'gen|' + p.mode + '|' + p.amtMs.toFixed(3) : 'side';
+}
+
+/* Запас по уровню: widening честно добавляет до +3 дБ, а всё выше 0 dBFS
+   браузер режет в «кирпич» — это и слышно как треск. Нужный гейн зависит от
+   Width, поэтому считаем его в два приёма:
+
+   1) мгновенно — по готовым пикам при g = -1, -0.5, 0, +0.5, +1. Функция
+      peak(g) выпукла (максимум модулей линейных функций), значит ломаная по
+      этим точкам всегда не ниже настоящего пика. Такая оценка не может
+      пропустить клиппинг даже при самом быстром вращении ручки;
+   2) через 120 мс после последнего движения — точный пик по всему файлу,
+      он всегда ≤ оценки, то есть гейн может только подрасти.
+
+   Экспорт не затрагивается: там 32-bit float без клиппинга. */
+function trimBound(g) {
+    const T = state.peaks;
+    if (!T) return 1;
+
+    let p;
+    if (g <= T[0].g) p = T[0].p;
+    else if (g >= T[4].g) p = T[4].p;
+    else {
+        let i = 1;
+        while (g > T[i].g) i++;
+        const a = T[i - 1], b = T[i];
+        p = a.p + (g - a.g) / (b.g - a.g) * (b.p - a.p);
+    }
+    return p > 0.99 ? 0.99 / p : 1.0;
+}
+
+function trimExact(g) {
+    if (!state.sideBuffer || !state.audioBuffer) return 1;
+    const peak = mixPeak(state.audioBuffer, state.sideBuffer, g);
+    return peak > 0.99 ? 0.99 / peak : 1.0;
+}
+
+function applyTrim(instant, exact) {
+    if (!state.trimGain || !state.ctx || state.aiMode) return;   /* AI уже отлимитирован */
+    const g = live.width / 100;
+    const v = exact ? trimExact(g) : trimBound(g);
+    if (instant) state.trimGain.gain.setValueAtTime(v, state.ctx.currentTime);
+    else state.trimGain.gain.setTargetAtTime(v, state.ctx.currentTime, 0.03);
+}
+
+function applyWidth(instant) {
+    if (!state.gainB || !state.ctx) return;
+    const g = live.width / 100;
+    if (instant) state.gainB.gain.setValueAtTime(g, state.ctx.currentTime);
+    else state.gainB.gain.setTargetAtTime(g, state.ctx.currentTime, 0.015);
+}
+
+function scheduleTrim() {
+    const now = performance.now();
+    const wait = Math.max(0, 120 - (now - trimLast));
+    clearTimeout(trimTimer);
+    trimTimer = setTimeout(() => {
+        trimLast = performance.now();
+        applyTrim(false, true);
+    }, wait);
+}
+
+/* ---------- INVOISE AI ---------- */
+
+/* Лимитер с упреждением 8 мс и потолком -0.03 dBFS.
+   Гейн считается как минимум требуемого усиления по окну [i, i+look], поэтому
+   он опускается ДО прихода пика и сигнал задерживать не нужно. Спад — 0.5 мс,
+   восстановление — 120 мс. */
+function limitStereo(L, R, N, sr, ceilDb) {
+    const ceil = Math.pow(10, ceilDb / 20);
+    const look = Math.max(1, Math.round(sr * 0.008));
+
+    const need = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+        let a = L[i] < 0 ? -L[i] : L[i];
+        const b = R[i] < 0 ? -R[i] : R[i];
+        if (b > a) a = b;
+        need[i] = a > ceil ? ceil / a : 1;
+    }
+
+    const g = new Float32Array(N);
+    const dq = new Int32Array(N);
+    let head = 0, tail = 0;
+    for (let i = N - 1; i >= 0; i--) {
+        while (head < tail && dq[head] > i + look) head++;
+        while (tail > head && need[dq[tail - 1]] >= need[i]) tail--;
+        dq[tail++] = i;
+        g[i] = need[dq[head]];
+    }
+
+    const att = Math.exp(-1 / (sr * 0.0005));
+    const rel = Math.exp(-1 / (sr * 0.12));
+    let sm = N > 0 ? g[0] : 1;      /* стартуем уже с нужного гейна, без «разгона» */
+    for (let i = 0; i < N; i++) {
+        const t = g[i];
+        sm = t < sm ? t + (sm - t) * att : t + (sm - t) * rel;
+        L[i] *= sm;
+        R[i] *= sm;
+    }
+}
+
+/* Три клона файла, каждый Width +100, складываются и лимитируются. */
+async function renderAI(onProgress) {
+    const input = state.audioBuffer;
+    const sr = input.sampleRate;
+    const N = input.length;
+    const inL = input.getChannelData(0);
+    const inR = input.numberOfChannels > 1 ? input.getChannelData(1) : inL;
+
+    let mid = new Float32Array(N);
+    for (let i = 0; i < N; i++) mid[i] = (inL[i] + inR[i]) * 0.5;
+
+    const acc = new Float32Array(N);
+    for (let k = 0; k < AI_LAYERS.length; k++) {
+        const g0 = await computeG0(mid, N, sr, AI_LAYERS[k].mode, AI_LAYERS[k].amtMs);
+        for (let i = 0; i < N; i++) acc[i] += g0[i];
+        if (onProgress) onProgress(Math.round((k + 1) / AI_LAYERS.length * 70));
+    }
+    mid = null;
+
+    /* Width +100 у всех трёх: L + P, значит сумма/3 = L + S + mean(G0).
+       Массив acc переиспользуется под левый канал. */
+    const outL = acc;
+    for (let i = 0; i < N; i++) {
+        outL[i] = inL[i] + (inL[i] - inR[i]) * 0.5 + outL[i] * AI_SUM;
+    }
+    const outR = new Float32Array(N);
+    for (let i = 0; i < N; i++) outR[i] = inL[i] + inR[i] - outL[i];
+
+    limitStereo(outL, outR, N, sr, AI_CEIL_DB);
+    if (onProgress) onProgress(85);
+
+    const out = new AudioBuffer({ length: N, numberOfChannels: 2, sampleRate: sr });
+    out.copyToChannel(outL, 0);
+    out.copyToChannel(outR, 1);
+    if (onProgress) onProgress(100);
+    return out;
+}
+
+function setAIModeUi(on) {
+    state.aiMode = on;
+    panel.classList.toggle('ai', on);
+    btnAI.classList.toggle('on', on);
+    /* цвет облака зависит от режима — перерисуем, если сейчас не играет */
+    if (!state.playing && state.stage === 2) {
+        const b = on ? state.aiBuffer : (state.processedBuffer || state.audioBuffer);
+        if (b) drawScopeFromBuffer(b);
+    }
+}
+
+/* что сейчас должно звучать */
+function currentProgram() {
+    if (state.aiMode && state.aiBuffer) {
+        return { main: state.aiBuffer, side: null, g: 0, trim: 1 };
+    }
+    return {
+        main: state.audioBuffer,
+        side: state.sideBuffer,
+        g: live.width / 100,
+        trim: trimBound(live.width / 100)
+    };
+}
+
+/* Подмена программы на лету: новые источники стартуют ровно с той позиции,
+   которую играют текущие, и перекрёстно затухают за 30 мс. */
+function swapProgram() {
+    const ctx = state.ctx;
+    if (!ctx || !state.srcA || !state.audioBuffer) return;
+
+    const prog = currentProgram();
+    if (!prog.main) return;
+
+    const dur = state.audioBuffer.duration;
+    const t = ctx.currentTime + 0.05;
+    let pos = (t - state.startTime) % dur;
+    if (pos < 0) pos += dur;
+
+    const a = ctx.createBufferSource();
+    a.buffer = prog.main;
+    a.loop = true;
+    const ga = ctx.createGain();
+    ga.gain.value = 0;
+    a.connect(ga);
+    ga.connect(state.trimGain);
+    a.start(t, pos);
+    ga.gain.setValueAtTime(0, t);
+    ga.gain.linearRampToValueAtTime(1, t + 0.03);
+
+    let b = null, gb = null;
+    if (prog.side) {
+        b = ctx.createBufferSource();
+        b.buffer = prog.side;
+        b.loop = true;
+        gb = ctx.createGain();
+        gb.gain.value = 0;
+        b.connect(gb);
+        gb.connect(state.trimGain);
+        b.start(t, pos);
+        gb.gain.setValueAtTime(0, t);
+        gb.gain.linearRampToValueAtTime(prog.g, t + 0.03);
+    }
+
+    state.gainA.gain.setValueAtTime(state.gainA.gain.value, t);
+    state.gainA.gain.linearRampToValueAtTime(0, t + 0.03);
+    if (state.gainB) {
+        state.gainB.gain.setValueAtTime(state.gainB.gain.value, t);
+        state.gainB.gain.linearRampToValueAtTime(0, t + 0.03);
+    }
+    state.trimGain.gain.setTargetAtTime(prog.trim, t, 0.02);
+
+    const oldA = state.srcA, oldGA = state.gainA, oldB = state.srcB, oldGB = state.gainB;
+    state.srcA = a;
+    state.gainA = ga;
+    state.srcB = b;
+    state.gainB = gb;
+
+    setTimeout(() => {
+        try { oldA.stop(); } catch (e) {}
+        try { oldGA.disconnect(); } catch (e) {}
+        if (oldB) { try { oldB.stop(); } catch (e) {} }
+        if (oldGB) { try { oldGB.disconnect(); } catch (e) {} }
+    }, 250);
+}
+
+function refreshPlayback() {
+    if (state.aiMode) return;
+
+    applyWidth(false);
+    applyTrim(false, false);
+    scheduleTrim();
+
+    const p = currentParams();
+    if (sideKeyOf(p) === state.sideKey) return;
+
+    clearTimeout(sideTimer);
+    sideTimer = setTimeout(async () => {
+        const q = currentParams();
+        if (!state.playing || state.aiMode || sideKeyOf(q) === state.sideKey) return;
+        const nb = await buildSideBuffer(q);
+        if (!nb || !state.playing || state.aiMode) return;
+        state.sideBuffer = nb;
+        state.sideKey = sideKeyOf(q);
+        swapProgram();
+        applyTrim(false, false);
+        scheduleTrim();
+    }, 180);
+}
+
+async function startPlayback() {
+    if (!state.audioBuffer || state.playing || state.starting) return;
+    state.starting = true;
+
+    try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new Ctx();
+        await ctx.resume();
+
+        pushParams();
+        const p = currentParams();
+
+        if (!state.aiMode && (!state.sideBuffer || state.sideKey !== sideKeyOf(p))) {
+            state.sideBuffer = await buildSideBuffer(p);
+            state.sideKey = sideKeyOf(p);
+        }
+
+        const prog = currentProgram();
+        if (!prog.main) return;
+
+        const srcA = ctx.createBufferSource();
+        srcA.buffer = prog.main;
+        srcA.loop = true;
+
+        const gA = ctx.createGain();
+        gA.gain.value = 1.0;
+
+        const trim = ctx.createGain();
+        trim.gain.value = prog.trim;
+
+        srcA.connect(gA);
+        gA.connect(trim);
+
+        let srcB = null, gB = null;
+        if (prog.side) {
+            srcB = ctx.createBufferSource();
+            srcB.buffer = prog.side;
+            srcB.loop = true;
+            gB = ctx.createGain();
+            gB.gain.value = prog.g;
+            srcB.connect(gB);
+            gB.connect(trim);
+        }
+
+        trim.connect(ctx.destination);
+
+        const splitter = ctx.createChannelSplitter(2);
+        const anL = ctx.createAnalyser(); anL.fftSize = 2048;
+        const anR = ctx.createAnalyser(); anR.fftSize = 2048;
+        trim.connect(splitter);
+        splitter.connect(anL, 0);
+        splitter.connect(anR, 1);
+
+        const t0 = ctx.currentTime + 0.08;
+        srcA.start(t0);
+        if (srcB) srcB.start(t0);
+
+        state.ctx = ctx;
+        state.srcA = srcA;
+        state.srcB = srcB;
+        state.gainA = gA;
+        state.gainB = gB;
+        state.trimGain = trim;
+        state.analyserL = anL;
+        state.analyserR = anR;
+        state.startTime = t0;
+        state.playing = true;
+        vizContainer.classList.add('playing');
+
+        btnPlay.textContent = '■ Стоп';
+        btnPlay.classList.add('playing');
+
+        startScopeLoop();
+    } finally {
+        state.starting = false;
+    }
+}
+
+function stopPlayback() {
+    clearTimeout(sideTimer);
+    clearTimeout(trimTimer);
+
+    if (state.srcA) { try { state.srcA.stop(); } catch (e) {} }
+    if (state.srcB) { try { state.srcB.stop(); } catch (e) {} }
+    if (state.trimGain) { try { state.trimGain.disconnect(); } catch (e) {} }
+    if (state.ctx) { try { state.ctx.close(); } catch (e) {} }
+
+    state.srcA = null;
+    state.srcB = null;
+    state.gainA = null;
+    state.gainB = null;
+    state.trimGain = null;
+    state.ctx = null;
+    state.analyserL = null;
+    state.analyserR = null;
+    state.playing = false;
+
+    if (state.rafId) { cancelAnimationFrame(state.rafId); state.rafId = 0; }
+
+    btnPlay.textContent = '▶ Прослушать';
+    btnPlay.classList.remove('playing');
+    vizContainer.classList.remove('playing');
+}
+
+btnPlay.addEventListener('click', () => {
+    if (btnPlay.disabled) return;
+    if (state.playing) stopPlayback();
+    else startPlayback();
+});
+
+/* ---------- переключатель INVOISE AI ---------- */
+
+async function setAIMode(on) {
+    if (state.aiBusy || !state.audioBuffer) return;
+    state.aiBusy = true;
+    btnAI.disabled = true;
+
+    try {
+        if (on) {
+            if (!state.aiBuffer) {
+                progressBar.style.width = '0%';
+                state.aiBuffer = await renderAI((p) => { progressBar.style.width = p + '%'; });
+                progressBar.style.width = '100%';
+                setTimeout(() => { progressBar.style.width = '0%'; }, 700);
+            }
+            setAIModeUi(true);
+            btnPlay.disabled = false;
+            btnDownload.disabled = false;
+            drawWaveform(state.aiBuffer, '#d4af37');
+            if (state.playing) swapProgram();
+        } else {
+            setAIModeUi(false);
+            if (state.playing) {
+                if (!state.sideBuffer) {
+                    const q = currentParams();
+                    state.sideBuffer = await buildSideBuffer(q);
+                    state.sideKey = sideKeyOf(q);
+                }
+                swapProgram();
+            }
+            /* если «Обработать» в AI-режиме сохранил AI-буфер, он больше не актуален */
+            if (state.processedBuffer === state.aiBuffer) {
+                state.processedBuffer = null;
+                btnDownload.disabled = true;
+            }
+            drawWaveform(state.audioBuffer, '#d4af37');
+            statusText.textContent = '';
+        }
+    } catch (e) {
+        console.error(e);
+        setAIModeUi(false);
+        statusText.textContent = 'INVOISE AI: ошибка рендеринга';
+    } finally {
+        state.aiBusy = false;
+        btnAI.disabled = false;
+    }
+}
+
+btnAI.addEventListener('click', () => { setAIMode(!state.aiMode); });
+
+syncModeUi();
+
+/* ---------- живой гониометр ---------- */
+
+const scopeBufL = new Float32Array(2048);
+const scopeBufR = new Float32Array(2048);
+
+function startScopeLoop() {
+    const draw = () => {
+        if (!state.playing) return;
+        state.analyserL.getFloatTimeDomainData(scopeBufL);
+        state.analyserR.getFloatTimeDomainData(scopeBufR);
+        drawScopeFromSamples(scopeBufL, scopeBufR, 2048);
+        updatePlayhead();
+        state.rafId = requestAnimationFrame(draw);
+    };
+    state.rafId = requestAnimationFrame(draw);
+}
+
+/* бегунок по волне: позиция считается от того же startTime, что и звук */
+function updatePlayhead() {
+    if (!state.ctx || !state.audioBuffer) return;
+    const dur = state.audioBuffer.duration;
+    let t = (state.ctx.currentTime - state.startTime) % dur;
+    if (t < 0) t += dur;
+    playhead.style.left = (t / dur * 100).toFixed(3) + '%';
+}
+
+function drawScopeFromSamples(L, R, n) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = scopeCanvas.getBoundingClientRect();
+    if (!rect.width) return;
+
+    if (scopeCanvas.width !== Math.round(rect.width * dpr)) {
+        scopeCanvas.width = rect.width * dpr;
+        scopeCanvas.height = rect.height * dpr;
+    }
+    scopeCtx.setTransform(1, 0, 0, 1, 0, 0);
+    scopeCtx.scale(dpr, dpr);
+
+    const w = rect.width, h = rect.height;
+    const cx = w / 2, cy = h / 2;
+    const Rr = Math.min(w, h) / 2 - 6;
+
+    scopeCtx.clearRect(0, 0, w, h);
+    scopeCtx.strokeStyle = '#1e1e1e';
+    scopeCtx.lineWidth = 1;
+    scopeCtx.beginPath();
+    scopeCtx.arc(cx, cy, Rr, 0, Math.PI * 2);
+    scopeCtx.moveTo(cx - Rr, cy); scopeCtx.lineTo(cx + Rr, cy);
+    scopeCtx.moveTo(cx, cy - Rr); scopeCtx.lineTo(cx, cy + Rr);
+    scopeCtx.stroke();
+
+    let peak = 1e-6, sumLR = 0, sumLL = 0, sumRR = 0;
+    for (let i = 0; i < n; i++) {
+        const l = L[i], r = R[i];
+        sumLR += l * r; sumLL += l * l; sumRR += r * r;
+        if (Math.abs(l) > peak) peak = Math.abs(l);
+        if (Math.abs(r) > peak) peak = Math.abs(r);
+    }
+
+    scopeCtx.fillStyle = state.aiMode ? 'rgba(115,230,204,0.58)' : 'rgba(212,175,55,0.72)';
+    const stride = Math.max(1, Math.floor(n / 4000));
+    for (let i = 0; i < n; i += stride) {
+        const x = (L[i] - R[i]) * 0.7071;
+        const y = (L[i] + R[i]) * 0.7071;
+        scopeCtx.fillRect(cx + x / peak * Rr * 0.92, cy - y / peak * Rr * 0.92, 1.4, 1.4);
+    }
+
+    updateCorrMeter(sumLR / Math.sqrt(Math.max(sumLL * sumRR, 1e-12)));
+}
+
+function drawScopeFromBuffer(buffer) {
+    const L = buffer.getChannelData(0);
+    const R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : L;
+    const win = Math.min(buffer.length, Math.floor(buffer.sampleRate * 0.5));
+    let best = 0, bestPos = 0;
+    for (let p = 0; p + win < buffer.length; p += win) {
+        let e = 0;
+        for (let i = p; i < p + win; i += 16) e += L[i] * L[i] + R[i] * R[i];
+        if (e > best) { best = e; bestPos = p; }
+    }
+    const n = Math.min(win, 8192);
+    const sl = new Float32Array(n), sr = new Float32Array(n);
+    const stride = Math.max(1, Math.floor(win / n));
+    for (let i = 0; i < n; i++) {
+        const j = Math.min(bestPos + i * stride, L.length - 1);
+        sl[i] = L[j];
+        sr[i] = R[j];
+    }
+    drawScopeFromSamples(sl, sr, n);
+}
+
+function updateCorrMeter(corr) {
+    const c = Math.max(-1, Math.min(1, corr));
+    corrFill.style.height = ((c + 1) / 2 * 100) + '%';
+    corrFill.style.background = c < 0 ? '#c0554f' : (c < 0.4 ? '#d4af37' : '#76a1f8');
+    corrVal.textContent = c.toFixed(2);
+    corrVal.style.color = c < 0 ? '#c0554f' : '#76a1f8';
+}
+
+/* ---------- рендер для экспорта ---------- */
+
+btnProcess.addEventListener('click', async () => {
     if (!state.audioBuffer || state.isProcessing) return;
-    
+
     state.isProcessing = true;
     btnProcess.disabled = true;
     btnDownload.disabled = true;
-    statusText.textContent = 'Рендеринг студии...';
     progressBar.style.width = '0%';
 
-    const sampleRate = state.audioBuffer.sampleRate;
-    const length = state.audioBuffer.length;
-
     try {
-        const renderedBuffer = await renderOrbit71(state.audioBuffer, sampleRate, (progress) => {
-            progressBar.style.width = `${progress}%`;
-        });
-        state.processedBuffer = renderedBuffer;
-        
+        /* в режиме INVOISE AI «Обработать» отдаёт то, что слышно — готовый AI-буфер */
+        const rendered = (state.aiMode && state.aiBuffer)
+            ? state.aiBuffer
+            : await renderImager(state.audioBuffer, state.audioBuffer.sampleRate, currentParams(), (p) => {
+                progressBar.style.width = p + '%';
+            });
+        state.processedBuffer = rendered;
         progressBar.style.width = '100%';
-        statusText.textContent = 'Еще один шедевр создан';
+        setTimeout(() => { progressBar.style.width = '0%'; }, 700);
         btnDownload.disabled = false;
-        
-        drawWaveform(renderedBuffer, '#d4af37');
-        
+        btnPlay.disabled = false;
+        setStage(2);                      /* вот теперь открываются настройки */
+        statusText.textContent = '';
+        drawWaveform(state.audioBuffer, '#d4af37');
+        if (!state.playing) drawScopeFromBuffer(rendered);
     } catch (e) {
         console.error(e);
         statusText.textContent = 'Ошибка рендеринга';
@@ -311,149 +1919,463 @@ async function processAudio() {
         state.isProcessing = false;
         btnProcess.disabled = false;
     }
+});
+
+/* ---------- визуализация волны ---------- */
+
+function roundRectPath(ctx, x, y, w, h, r) {
+    if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); return; }
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
 }
-
-// --- 3. DSP HELPERS ---
-
-async function renderOrbit71(input, sampleRate, onProgress) {
-    const length = input.length;
-    const inputLeft = input.getChannelData(0);
-    const inputRight = input.numberOfChannels > 1 ? input.getChannelData(1) : inputLeft;
-    const mixLeft = new Float32Array(length);
-    const mixRight = new Float32Array(length);
-    const delaySamples = [8, 6, 7].map(ms => Math.max(1, Math.round(sampleRate * ms / 1000)));
-    const velvetTaps = [0.42, -0.31, 0.24, -0.18, 0.13, -0.095, 0.065, -0.04];
-    const velvetOffsets = [0.37, 0.89, 1.57, 2.31, 3.19, 4.27, 5.53, 6.91];
-    const historySize = Math.max(4096, Math.ceil(sampleRate * 0.02) + 1);
-    const histories = [
-        new Float32Array(historySize),
-        new Float32Array(historySize),
-        new Float32Array(historySize)
-    ];
-    let peak = 0;
-
-    for (let i = 0; i < length; i++) {
-        const sourceLeft = inputLeft[i];
-        const sourceRight = inputRight[i];
-        const mid = (sourceLeft + sourceRight) * 0.5;
-        const originalSide = (sourceLeft - sourceRight) * 0.5;
-
-        const sideMode2A = orbitVelvetSide(mid, i, delaySamples[0], histories[0], sampleRate, velvetTaps, velvetOffsets);
-        const sideMode1 = orbitHaasSide(mid, i, delaySamples[1], histories[1]);
-        const sideMode2B = orbitVelvetSide(mid, i, delaySamples[2], histories[2], sampleRate, velvetTaps, velvetOffsets);
-
-        // Each branch is a complete stereo duplicate, not only a side signal.
-        const branchOneSide = originalSide * 2 + sideMode2A * 0.6;
-        const branchTwoSide = originalSide * 2 + sideMode1 * 0.6;
-        const branchThreeSide = originalSide * 2 + sideMode2B * 0.6;
-        const branchOneLeft = mid + branchOneSide;
-        const branchOneRight = mid - branchOneSide;
-        const branchTwoLeft = mid + branchTwoSide;
-        const branchTwoRight = mid - branchTwoSide;
-        const branchThreeLeft = mid + branchThreeSide;
-        const branchThreeRight = mid - branchThreeSide;
-
-        // True 3-track parallel sum happens before the final limiter.
-        const left = branchOneLeft + branchTwoLeft + branchThreeLeft;
-        const right = branchOneRight + branchTwoRight + branchThreeRight;
-        mixLeft[i] = left;
-        mixRight[i] = right;
-        peak = Math.max(peak, Math.abs(left), Math.abs(right));
-
-        if ((i & 65535) === 0) {
-            onProgress(Math.round(i / length * 90));
-            await new Promise(resolve => setTimeout(resolve, 0));
-        }
-    }
-
-    const ceiling = 0.999;
-    const limiterGain = peak > ceiling ? ceiling / peak : 1;
-    for (let i = 0; i < length; i++) {
-        mixLeft[i] *= limiterGain;
-        mixRight[i] *= limiterGain;
-    }
-
-    const output = new AudioBuffer({ length, numberOfChannels: 2, sampleRate });
-    output.copyToChannel(mixLeft, 0);
-    output.copyToChannel(mixRight, 1);
-    onProgress(100);
-    return output;
-}
-
-function orbitHaasSide(mid, index, delaySamples, history) {
-    if (index < delaySamples)
-        return 0;
-    history[index % history.length] = mid;
-    return history[(index - delaySamples) % history.length];
-}
-
-function orbitVelvetSide(mid, index, baseDelay, history, sampleRate, taps, offsets) {
-    history[index % history.length] = mid;
-    let side = 0;
-    for (let tap = 0; tap < taps.length; tap++) {
-        const offset = baseDelay + Math.max(1, Math.round(offsets[tap] * sampleRate / 1000));
-        const position = index - offset;
-        if (position >= 0)
-            side += history[position % history.length] * taps[tap];
-    }
-    return side;
-}
-
-// --- 4. VISUALIZATION ---
 
 function drawWaveform(buffer, color = '#d4af37') {
-    // Handle DPI scaling
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
-    
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    
+    if (!rect.width) return;
+
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
     canvasCtx.scale(dpr, dpr);
-    
-    const width = rect.width;
-    const height = rect.height;
+
+    const w = rect.width, h = rect.height;
+    const mid = h / 2;
+    const reach = mid - 5;
     const data = buffer.getChannelData(0);
-    const step = Math.ceil(data.length / width);
-    const amp = height / 2;
+    const data2 = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : null;
 
-    canvasCtx.clearRect(0, 0, width, height);
-    canvasCtx.strokeStyle = color;
-    canvasCtx.lineWidth = 1.5;
+    canvasCtx.clearRect(0, 0, w, h);
+
+    /* тихая сетка */
+    canvasCtx.strokeStyle = 'rgba(255,255,255,0.026)';
+    canvasCtx.lineWidth = 1;
     canvasCtx.beginPath();
-
-    for (let i = 0; i < width; i++) {
-        let min = 1.0, max = -1.0;
-        const startIdx = i * step;
-        const endIdx = Math.min(startIdx + step, data.length);
-        
-        for (let j = startIdx; j < endIdx; j++) {
-            const datum = data[j];
-            if (datum < min) min = datum;
-            if (datum > max) max = datum;
-        }
-        
-        // Map values to Y coordinates
-        const yTop = (1 + min) * amp;
-        const yBottom = (1 + max) * amp;
-        
-        canvasCtx.moveTo(i, yTop);
-        canvasCtx.lineTo(i, yBottom);
+    for (let x = 0; x < w; x += 36) {
+        canvasCtx.moveTo(Math.round(x) + 0.5, 0);
+        canvasCtx.lineTo(Math.round(x) + 0.5, h);
     }
     canvasCtx.stroke();
+
+    const bars = Math.max(24, Math.min(420, Math.floor(w / 3)));
+    const step = data.length / bars;
+    const tops = new Float32Array(bars);
+    const bots = new Float32Array(bars);
+
+    for (let b = 0; b < bars; b++) {
+        const s0 = Math.floor(b * step);
+        const s1 = Math.min(data.length, Math.floor((b + 1) * step));
+        let mn = 0, mx = 0;
+        for (let i = s0; i < s1; i++) {
+            let v = data[i];
+            if (data2) v = (v + data2[i]) * 0.5;
+            if (v < mn) mn = v;
+            if (v > mx) mx = v;
+        }
+        tops[b] = mx;
+        bots[b] = mn;
+    }
+
+    const bw = Math.max(1.2, w / bars - 1.25);
+
+    /* свечение под столбиками */
+    canvasCtx.globalCompositeOperation = 'lighter';
+    canvasCtx.fillStyle = 'rgba(212,175,55,0.055)';
+    for (let b = 0; b < bars; b++) {
+        const x = b * (w / bars);
+        const y0 = mid - tops[b] * reach;
+        const y1 = mid - bots[b] * reach;
+        canvasCtx.fillRect(x - 1, y0 - 2, bw + 2, (y1 - y0) + 4);
+    }
+    canvasCtx.globalCompositeOperation = 'source-over';
+
+    /* сами столбики — золотой градиент, зеркально от центра */
+    const grad = canvasCtx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0.00, '#7d5f1a');
+    grad.addColorStop(0.14, '#a67d24');
+    grad.addColorStop(0.34, '#e0b544');
+    grad.addColorStop(0.50, '#ffe9a8');
+    grad.addColorStop(0.66, '#e0b544');
+    grad.addColorStop(0.86, '#a67d24');
+    grad.addColorStop(1.00, '#7d5f1a');
+    canvasCtx.fillStyle = grad;
+
+    for (let b = 0; b < bars; b++) {
+        const x = b * (w / bars);
+        const y0 = mid - tops[b] * reach;
+        const y1 = mid - bots[b] * reach;
+        const hh = Math.max(1.6, y1 - y0);
+        roundRectPath(canvasCtx, x, y0, bw, hh, Math.min(bw / 2, 1.8, hh / 2));
+        canvasCtx.fill();
+    }
+
+    /* стеклянный блик сверху */
+    const glass = canvasCtx.createLinearGradient(0, 0, 0, h);
+    glass.addColorStop(0.00, 'rgba(255,255,255,0.055)');
+    glass.addColorStop(0.45, 'rgba(255,255,255,0.00)');
+    canvasCtx.fillStyle = glass;
+    canvasCtx.fillRect(0, 0, w, h);
 }
 
-// --- 5. EXPORT (WAV ENCODER - FIXED FOR COMPATIBILITY) ---
+/* ---------- QR (byte mode, ECC M, версии 1–10) ----------
+   Свой кодек, без внешних библиотек: страница остаётся одним файлом
+   и работает офлайн. Сверен с эталонной реализацией по всем 8 маскам. */
+const QR = (() => {
+    const ECC_M = {
+        1:  [10, [[1, 16]]],
+        2:  [16, [[1, 28]]],
+        3:  [26, [[1, 44]]],
+        4:  [18, [[2, 32]]],
+        5:  [24, [[2, 43]]],
+        6:  [16, [[4, 27]]],
+        7:  [18, [[4, 31]]],
+        8:  [22, [[2, 38], [2, 39]]],
+        9:  [22, [[3, 36], [2, 37]]],
+        10: [26, [[4, 43], [1, 44]]]
+    };
+    const ALIGN = { 1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26], 5: [6, 30], 6: [6, 34],
+                    7: [6, 22, 38], 8: [6, 24, 42], 9: [6, 26, 46], 10: [6, 28, 50] };
 
-btnProcess.addEventListener('click', processAudio);
+    const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+    (() => {
+        let x = 1;
+        for (let i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11D; }
+        for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+    })();
+    const gmul = (a, b) => (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]];
 
-btnDownload.addEventListener('click', () => {
-    if (!state.processedBuffer) return;
-    statusText.textContent = 'Подготовка файла...';
-    
-    // Small timeout to allow UI update before heavy computation
-    setTimeout(async () => {
-        const exportBuffer = await resampleAudioBuffer(state.processedBuffer, 96000);
+    function rsGen(n) {
+        let g = [1];
+        for (let i = 0; i < n; i++) {
+            const next = new Array(g.length + 1).fill(0);
+            for (let j = 0; j < g.length; j++) {
+                next[j] ^= g[j];
+                next[j + 1] ^= gmul(g[j], EXP[i]);
+            }
+            g = next;
+        }
+        return g;
+    }
+
+    function rsEncode(data, ecLen) {
+        const gen = rsGen(ecLen);
+        const res = new Uint8Array(data.length + ecLen);
+        res.set(data);
+        for (let i = 0; i < data.length; i++) {
+            const f = res[i];
+            if (f === 0) continue;
+            for (let j = 0; j < gen.length; j++) res[i + j] ^= gmul(gen[j], f);
+        }
+        return res.subarray(data.length);
+    }
+
+    function maskFn(mask, r, c) {
+        switch (mask) {
+            case 0: return (r + c) % 2 === 0;
+            case 1: return r % 2 === 0;
+            case 2: return c % 3 === 0;
+            case 3: return (r + c) % 3 === 0;
+            case 4: return (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+            case 5: return ((r * c) % 2) + ((r * c) % 3) === 0;
+            case 6: return (((r * c) % 2) + ((r * c) % 3)) % 2 === 0;
+            default: return (((r + c) % 2) + ((r * c) % 3)) % 2 === 0;
+        }
+    }
+
+    function encodeData(text) {
+        const bytes = new TextEncoder().encode(text);
+        let version = 0, dataCw = 0;
+        for (let v = 1; v <= 10; v++) {
+            const blocks = ECC_M[v][1];
+            let cap = 0;
+            for (const [n, d] of blocks) cap += n * d;
+            const need = 4 + (v <= 9 ? 8 : 16) + bytes.length * 8;
+            if (need <= cap * 8) { version = v; dataCw = cap; break; }
+        }
+        if (!version) throw new Error('QR: слишком длинный текст');
+
+        const ecLen = ECC_M[version][0];
+        const blocks = ECC_M[version][1];
+
+        const bits = [];
+        const push = (val, len) => { for (let i = len - 1; i >= 0; i--) bits.push((val >> i) & 1); };
+        push(0b0100, 4);
+        push(bytes.length, version <= 9 ? 8 : 16);
+        for (const b of bytes) push(b, 8);
+        const capBits = dataCw * 8;
+        for (let i = 0; i < Math.min(4, capBits - bits.length); i++) bits.push(0);
+        while (bits.length % 8) bits.push(0);
+
+        const data = [];
+        for (let i = 0; i < bits.length; i += 8) {
+            let v = 0;
+            for (let j = 0; j < 8; j++) v = (v << 1) | bits[i + j];
+            data.push(v);
+        }
+        const pad = [0xEC, 0x11];
+        let pi = 0;
+        while (data.length < dataCw) data.push(pad[pi++ % 2]);
+
+        const dBlocks = [], eBlocks = [];
+        let off = 0;
+        for (const [n, d] of blocks) {
+            for (let i = 0; i < n; i++) {
+                const chunk = Uint8Array.from(data.slice(off, off + d));
+                off += d;
+                dBlocks.push(chunk);
+                eBlocks.push(rsEncode(chunk, ecLen));
+            }
+        }
+        const cw = [];
+        const maxD = Math.max(...dBlocks.map(b => b.length));
+        for (let i = 0; i < maxD; i++) for (const b of dBlocks) if (i < b.length) cw.push(b[i]);
+        for (let i = 0; i < ecLen; i++) for (const b of eBlocks) cw.push(b[i]);
+        return { version, codewords: Uint8Array.from(cw) };
+    }
+
+    function build(version, codewords, mask) {
+        const size = version * 4 + 17;
+        const m = [], fn = [];
+        for (let r = 0; r < size; r++) { m.push(new Array(size).fill(0)); fn.push(new Array(size).fill(false)); }
+        const set = (r, c, v) => {
+            if (r < 0 || c < 0 || r >= size || c >= size) return;
+            m[r][c] = v; fn[r][c] = true;
+        };
+
+        const finder = (r0, c0) => {
+            for (let r = -1; r <= 7; r++) for (let c = -1; c <= 7; c++) {
+                const on = (r >= 0 && r <= 6 && (c === 0 || c === 6)) ||
+                           (c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
+                           (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+                set(r0 + r, c0 + c, on ? 1 : 0);
+            }
+        };
+        finder(0, 0); finder(0, size - 7); finder(size - 7, 0);
+
+        for (let i = 8; i < size - 8; i++) {
+            const v = i % 2 === 0 ? 1 : 0;
+            set(6, i, v); set(i, 6, v);
+        }
+
+        for (const r of ALIGN[version]) for (const c of ALIGN[version]) {
+            if ((r <= 8 && c <= 8) || (r <= 8 && c >= size - 9) || (r >= size - 9 && c <= 8)) continue;
+            for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) {
+                set(r + dr, c + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1 ? 1 : 0);
+            }
+        }
+
+        for (let i = 0; i <= 8; i++) { if (!fn[8][i]) set(8, i, 0); if (!fn[i][8]) set(i, 8, 0); }
+        for (let i = 0; i < 8; i++) { if (!fn[8][size - 1 - i]) set(8, size - 1 - i, 0); if (!fn[size - 1 - i][8]) set(size - 1 - i, 8, 0); }
+        set(size - 8, 8, 1);
+
+        if (version >= 7) {
+            let rem = version << 12;
+            for (let i = 17; i >= 12; i--) if ((rem >> i) & 1) rem ^= 0x1F25 << (i - 12);
+            const vinfo = (version << 12) | rem;
+            for (let i = 0; i < 18; i++) {
+                const b = (vinfo >> i) & 1;
+                const r = Math.floor(i / 3), c = i % 3;
+                set(size - 11 + c, r, b);
+                set(r, size - 11 + c, b);
+            }
+        }
+
+        let bitIdx = 0;
+        const total = codewords.length * 8;
+        let up = true;
+        for (let col = size - 1; col > 0; col -= 2) {
+            if (col === 6) col--;
+            for (let i = 0; i < size; i++) {
+                const row = up ? size - 1 - i : i;
+                for (let k = 0; k < 2; k++) {
+                    const c = col - k;
+                    if (fn[row][c]) continue;
+                    let v = 0;
+                    if (bitIdx < total) {
+                        v = (codewords[bitIdx >> 3] >> (7 - (bitIdx & 7))) & 1;
+                        bitIdx++;
+                    }
+                    if (maskFn(mask, row, c)) v ^= 1;
+                    m[row][c] = v;
+                }
+            }
+            up = !up;
+        }
+
+        const fmt = mask;                        /* ECC M = 00 + 3 бита маски */
+        let f = fmt << 10;
+        for (let i = 14; i >= 10; i--) if ((f >> i) & 1) f ^= 0x537 << (i - 10);
+        const finfo = ((fmt << 10) | f) ^ 0x5412;
+        const fb = i => (finfo >> i) & 1;
+
+        const fpos1 = [[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 7], [8, 8],
+                       [7, 8], [5, 8], [4, 8], [3, 8], [2, 8], [1, 8], [0, 8]];
+        for (let i = 0; i < 15; i++) m[fpos1[i][0]][fpos1[i][1]] = fb(14 - i);
+        for (let i = 0; i < 7; i++) m[size - 1 - i][8] = fb(14 - i);
+        for (let i = 0; i < 8; i++) m[8][size - 8 + i] = fb(7 - i);
+        m[size - 8][8] = 1;
+        return m;
+    }
+
+    function penalty(m) {
+        const n = m.length;
+        let score = 0;
+        const runs = (get) => {
+            let s = 0;
+            for (let a = 0; a < n; a++) {
+                let run = 1;
+                for (let b = 1; b < n; b++) {
+                    if (get(a, b) === get(a, b - 1)) run++;
+                    else { if (run >= 5) s += 3 + (run - 5); run = 1; }
+                }
+                if (run >= 5) s += 3 + (run - 5);
+            }
+            return s;
+        };
+        score += runs((a, b) => m[a][b]);
+        score += runs((a, b) => m[b][a]);
+
+        for (let r = 0; r < n - 1; r++) for (let c = 0; c < n - 1; c++) {
+            const v = m[r][c];
+            if (v === m[r][c + 1] && v === m[r + 1][c] && v === m[r + 1][c + 1]) score += 3;
+        }
+
+        const p1 = [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0];
+        const p2 = [0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1];
+        const hit = (arr, pat, i) => {
+            for (let k = 0; k < 11; k++) if (arr[i + k] !== pat[k]) return false;
+            return true;
+        };
+        for (let a = 0; a < n; a++) {
+            const row = m[a], col = m.map(r => r[a]);
+            for (let i = 0; i <= n - 11; i++) {
+                if (hit(row, p1, i) || hit(row, p2, i)) score += 40;
+                if (hit(col, p1, i) || hit(col, p2, i)) score += 40;
+            }
+        }
+
+        let dark = 0;
+        for (const row of m) for (const v of row) dark += v;
+        score += Math.floor(Math.abs(dark * 100 / (n * n) - 50) / 5) * 10;
+        return score;
+    }
+
+    return {
+        matrix(text) {
+            const { version, codewords } = encodeData(text);
+            let best = null, bestScore = Infinity;
+            for (let mask = 0; mask < 8; mask++) {
+                const m = build(version, codewords, mask);
+                const s = penalty(m);
+                if (s < bestScore) { bestScore = s; best = m; }
+            }
+            return best;
+        }
+    };
+})();
+
+/* ---------- экран благодарности ---------- */
+
+/* Чаевые. Хочешь, чтобы сканирование сразу открывало перевод по СБП —
+   сгенерируй свой QR в приложении банка и положи рядом с index.html
+   файлом sbp.png: он подхватится автоматически. Пока его нет, в QR
+   уходит номер телефона. */
+const TIP_QR_TEXT = '+79996370785';
+
+const grat = document.getElementById('grat');
+const gratBack = document.getElementById('gratBack');
+const gratQr = document.getElementById('gratQr');
+const qrCanvas = document.getElementById('qrCanvas');
+let gratReady = false;
+
+function drawQR(canvasEl, text) {
+    const matrix = QR.matrix(text);
+    const n = matrix.length;
+    const quiet = 4;
+    const total = n + quiet * 2;
+    const cell = Math.max(2, Math.floor(308 / total));
+    const size = cell * total;
+    canvasEl.width = size;
+    canvasEl.height = size;
+    const ctx = canvasEl.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = '#070707';
+    for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+            if (matrix[r][c]) ctx.fillRect((c + quiet) * cell, (r + quiet) * cell, cell, cell);
+        }
+    }
+}
+
+function buildGratitude() {
+    if (gratReady) return;
+    gratReady = true;
+
+    /* телефон — по одной букве, чтобы каждая всплывала со своей задержкой */
+    const phone = document.getElementById('gratPhone');
+    const raw = phone.textContent;
+    phone.textContent = '';
+    Array.from(raw).forEach((ch, i) => {
+        const sp = document.createElement('span');
+        sp.textContent = ch === ' ' ? '\u00A0' : ch;
+        sp.style.setProperty('--i', i);
+        phone.appendChild(sp);
+    });
+
+    try {
+        drawQR(qrCanvas, TIP_QR_TEXT);
+    } catch (e) {
+        console.error(e);
+    }
+
+    /* если рядом лежит настоящий QR из банка — показываем его */
+    const img = new Image();
+    img.alt = 'QR для перевода';
+    img.onload = () => { qrCanvas.style.display = 'none'; gratQr.appendChild(img); };
+    img.src = 'sbp.png';
+}
+
+function openGratitude() {
+    buildGratitude();
+    document.body.classList.add('grat-open');
+    grat.classList.add('on');
+    grat.setAttribute('aria-hidden', 'false');
+}
+
+function closeGratitude() {
+    grat.classList.remove('on');
+    grat.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('grat-open');
+}
+
+gratBack.addEventListener('click', closeGratitude);
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && grat.classList.contains('on')) closeGratitude();
+});
+
+/* ---------- экспорт ---------- */
+
+btnDownload.addEventListener('click', async () => {
+    if (btnDownload.disabled || !state.audioBuffer) return;
+
+    btnDownload.disabled = true;
+    try {
+        /* В ручном режиме всегда рендерим заново: ручки могли уехать после
+           «Обработать», а файл обязан совпадать с тем, что человек слышит. */
+        let src = (state.aiMode && state.aiBuffer) ? state.aiBuffer : null;
+        if (!src) {
+            src = await renderImager(state.audioBuffer, state.audioBuffer.sampleRate, currentParams(),
+                (p) => { progressBar.style.width = p + '%'; });
+            state.processedBuffer = src;
+        }
+
+        const exportBuffer = await resampleAudioBuffer(src, 96000);
         const wavBlob = encodeWAV(exportBuffer);
         const url = URL.createObjectURL(wavBlob);
         const a = document.createElement('a');
@@ -462,61 +2384,59 @@ btnDownload.addEventListener('click', () => {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        statusText.textContent = 'Файл скачан.';
-    }, 10);
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+
+        progressBar.style.width = '100%';
+        setTimeout(() => { progressBar.style.width = '0%'; }, 700);
+    } catch (e) {
+        console.error(e);
+        statusText.textContent = 'Не удалось собрать WAV — попробуйте ещё раз.';
+    } finally {
+        btnDownload.disabled = false;
+        /* файл уже ушёл на диск — уступаем экран благодарности */
+        setTimeout(openGratitude, 380);
+    }
 });
 
-/**
- * Encodes AudioBuffer to 32-bit IEEE float WAV Blob.
- */
 function encodeWAV(audioBuffer) {
     const numChannels = audioBuffer.numberOfChannels;
     const sampleRate = audioBuffer.sampleRate;
-     const format = 3; // IEEE floating point
-     const bitDepth = 32;
-    
+    const format = 3;
+    const bitDepth = 32;
+
     const bytesPerSample = bitDepth / 8;
     const blockAlign = numChannels * bytesPerSample;
     const dataSize = audioBuffer.length * blockAlign;
     const headerSize = 44;
     const totalSize = headerSize + dataSize;
-    
+
     const arrayBuffer = new ArrayBuffer(totalSize);
     const view = new DataView(arrayBuffer);
 
-    // --- Write Header ---
     writeString(view, 0, 'RIFF');
-    view.setUint32(4, totalSize - 8, true); // ChunkSize
+    view.setUint32(4, totalSize - 8, true);
     writeString(view, 8, 'WAVE');
     writeString(view, 12, 'fmt ');
-    view.setUint32(16, 16, true); // Subchunk1Size (16 for PCM)
-    view.setUint16(20, format, true); // AudioFormat (1 = PCM)
-    view.setUint16(22, numChannels, true); // NumChannels
-    view.setUint32(24, sampleRate, true); // SampleRate
-    view.setUint32(28, sampleRate * blockAlign, true); // ByteRate
-    view.setUint16(32, blockAlign, true); // BlockAlign
-    view.setUint16(34, bitDepth, true); // BitsPerSample
+    view.setUint32(16, 16, true);
+    view.setUint16(20, format, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bitDepth, true);
     writeString(view, 36, 'data');
-    view.setUint32(40, dataSize, true); // Subchunk2Size
+    view.setUint32(40, dataSize, true);
 
-    // --- Write Data ---
     let offset = 44;
     const channels = [];
-    for (let i = 0; i < numChannels; i++) {
-        channels.push(audioBuffer.getChannelData(i));
-    }
+    for (let i = 0; i < numChannels; i++) channels.push(audioBuffer.getChannelData(i));
 
     for (let i = 0; i < audioBuffer.length; i++) {
         for (let ch = 0; ch < numChannels; ch++) {
-            // Get float sample (-1.0 to 1.0)
             let sample = channels[ch][i];
-            
-            // Clamp to prevent distortion if values exceed range due to effects
             if (sample > 1.0) sample = 1.0;
             else if (sample < -1.0) sample = -1.0;
-            
-            view.setFloat32(offset, sample, true); // Little Endian
+            view.setFloat32(offset, sample, true);
             offset += 4;
         }
     }
@@ -543,12 +2463,20 @@ function writeString(view, offset, string) {
     }
 }
 
-// Init resize handler for canvas
+/* ---------- init ---------- */
+
+updateWidthLabel();
+updateAmtLabel();
+
 window.addEventListener('resize', () => {
-    if(state.processedBuffer) drawWaveform(state.processedBuffer, '#d4af37');
-    else if(state.audioBuffer) drawWaveform(state.audioBuffer, '#d4af37');
+    const buf = state.audioBuffer;
+    if (buf) {
+        drawWaveform(buf, '#d4af37');
+        if (!state.playing) drawScopeFromBuffer(buf);
+    }
 });
 
+window.addEventListener('beforeunload', () => { if (state.playing) stopPlayback(); });
 </script>
 </body>
 </html>
