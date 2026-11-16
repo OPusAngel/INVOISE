@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- ============ SEO: как сайт читают поисковики ============ -->
-    <title>INVOISE — PRO VOCAL STUDIO | стерео имаджер для вокала в браузере</title>
+    <title>INVOISE — PRO VOCAL STUDIO | плагин стерео расширения вокала</title>
 
-    <meta name="description" content="INVOISE — стерео имаджер для вокала в браузере. Ширина от −100 до +100 %, режимы MANKAI и SAKURA, INVOISE AI. Обработка локально, экспорт WAV 96 kHz / 32-bit Float.">
-    <meta name="keywords" content="INVOISE, Invoise, PRO VOCAL STUDIO, стерео имаджер, stereo imager, imager, ширина стерео, stereo width, расширение стереобазы, stereo widening, обработка вокала, vocal processing, Haas effect, velvet noise, декореляция, decorrelation, стерео в браузере, аудио онлайн, WAV 96 kHz, 32-bit float, бесплатно, без регистрации">
+    <meta name="description" content="INVOISE — плагин стерео расширения вокала. Ширина от −100 до +100 %, режимы MANKAI и SAKURA, INVOISE AI. Обработка локально, экспорт WAV 96 kHz / 32-bit Float.">
+    <meta name="keywords" content="INVOISE, Invoise, PRO VOCAL STUDIO, стерео расширение, stereo imager, imager, ширина стерео, stereo width, расширение стереобазы, stereo widening, обработка вокала, vocal processing, Haas effect, velvet noise, декореляция, decorrelation, стерео в браузере, аудио онлайн, WAV 96 kHz, 32-bit float, бесплатно, без регистрации">
     <meta name="author" content="INVOISE">
     <meta name="application-name" content="INVOISE">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -19,7 +19,7 @@
     <meta property="og:site_name" content="INVOISE">
     <meta property="og:url" content="https://invoise.ru/">
     <meta property="og:title" content="INVOISE — PRO VOCAL STUDIO">
-    <meta property="og:description" content="Стерео имаджер для вокала прямо в браузере: ширина от −100 до +100 %, режимы MANKAI и SAKURA, INVOISE AI. Локальная обработка, экспорт WAV 96 kHz / 32-bit Float.">
+    <meta property="og:description" content="Плагин стерео расширения вокала в браузере: ширина от −100 до +100 %, режимы MANKAI и SAKURA, INVOISE AI. Локальная обработка, экспорт WAV 96 kHz / 32-bit Float.">
     <meta property="og:image" content="https://invoise.ru/invoise.png">
     <meta property="og:image:width" content="230">
     <meta property="og:image:height" content="230">
@@ -27,7 +27,7 @@
     <meta property="og:locale" content="ru_RU">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="INVOISE — PRO VOCAL STUDIO">
-    <meta name="twitter:description" content="Стерео имаджер для вокала в браузере. Ширина от −100 до +100 %, режимы MANKAI и SAKURA, INVOISE AI. Экспорт WAV 96 kHz / 32-bit Float.">
+    <meta name="twitter:description" content="Плагин стерео расширения вокала в браузере. Ширина от −100 до +100 %, режимы MANKAI и SAKURA, INVOISE AI. Экспорт WAV 96 kHz / 32-bit Float.">
     <meta name="twitter:image" content="https://invoise.ru/invoise.png">
 
     <link rel="canonical" href="https://invoise.ru/">
@@ -48,7 +48,7 @@
       "browserRequirements": "Современный браузер с поддержкой Web Audio API",
       "inLanguage": "ru",
       "isAccessibleForFree": true,
-      "description": "Браузерный стерео имаджер для вокала: ширина стерео от −100 до +100 %, два режима декореляции (MANKAI и SAKURA) и режим INVOISE AI. Обработка идёт локально, без загрузки файла на сервер; экспорт в WAV 96 kHz / 32-bit Float.",
+      "description": "Браузерный плагин стерео расшрирения вокала: ширина стерео от −100 до +100 %, два режима декореляции (MANKAI и SAKURA) и режим INVOISE AI. Обработка идёт локально, без загрузки файла на сервер; экспорт в WAV 96 kHz / 32-bit Float.",
       "featureList": [
         "Ширина стерео от −100 до +100 %",
         "Два режима декореляции: MANKAI и SAKURA",
@@ -1099,12 +1099,6 @@
 
 <script>
 /**
- * INVOISE IMAGER ENGINE v3.4
- *
- * Алгоритм Ozone Imager 2, восстановленный по самому плагину
- * (iZOzoneImager2.dll): описания режимов взяты из строк движка,
- * законы ядра — из его коэффициентов.
- *
  * Топология (проверено: при Width = 0 выход совпадает с входом бит в бит):
  *
  *   k      = 1 + Width/100                     Width: -100 .. +100 %, дефолт 0
@@ -1118,11 +1112,11 @@
  *
  * Режимы (формулировки из ресурсов DLL, таблица описаний параметров):
  *
- *   Mode I  — "Haas Effect-based decorrelation. This mode delays a copy of
+ *   Mode I  — "MANKAI Effect-based decorrelation. This mode delays a copy of
  *              the mid channel and injects it into the side channel."
  *              То есть h = одиночный отвод на amt мс, усиление 1.
  *
- *   Mode II — "Velvet Noise-based decorrelation. This mode convolves the mid
+ *   Mode II — "SAKURA Noise-based decorrelation. This mode convolves the mid
  *              channel with a series of decaying Velvet Noise impulses to
  *              generate side channel content."
  *              Именно этот режим и работает в Ozone Imager 2.
@@ -1134,17 +1128,11 @@
  *   уровень = IMG_LEVEL[floor(4k / n)] / 80     то есть 17/80, 11/80, 7/80, 4/80
  *   знак    = IMG_SIGNS[k]                      фиксированная таблица
  *
- * Знаки и огибающая воспроизводятся точно. Позиции отводов плагин считает
- * псевдослучайно (ГПСЧ внутри DLL, начальное состояние фиксировано), поэтому
- * таблица IMG_POS снята с его коэффициентов: число отводов, знаки и уровни
- * совпадают полностью, позиции — с точностью до 1-2 отсчётов.
- *
- * --- v3.4 ---
- *
+
  * Оба режима реализованы и переключаются в интерфейсе (Stereo Mode I / II):
  *
  *   Mode I  : G0[i] = M[i - amt*sr/1000]                  (одиночная задержка)
- *   Mode II : G0[i] = sum_k h[k] * M[i - d_k]            (velvet-свёртка)
+ *   Mode II : G0[i] = sum_k h[k] * M[i - d_k]            (свёртка)
  *
  * и подмешиваются одинаково: S_out = k*S + (k-1)*G0. Это одна функция
  * computeG0(), общая для экспорта и для прослушивания, поэтому расхождений
