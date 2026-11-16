@@ -1021,12 +1021,26 @@
             /* VIVO/Chrome Android считают высоту окна со своей панелью инструментов:
                центрирование давало огромный зазор над короной. Прижимаем к верху. */
             .app-container {
-                justify-content: flex-start;
+                /* стартовый экран остаётся по центру, как и было */
+                justify-content: safe center;
                 /* minimum independent of a buggy dvh: even if the browser reports
                    a shorter window, the panel keeps its full height and the
                    goniometer never crawls over the buttons */
                 min-height: calc(100dvh - 4.4rem);
                 min-height: max(calc(100dvh - 4.4rem), 640px);
+            }
+            /* после «Обработать» — прижимаем к верху и чуть поднимаем
+               всю конструкцию (футер остаётся на месте). top, а не transform:
+               целые пиксели не размывают рамки на экранах с высоким DPR. */
+            body.studio-ready .app-container {
+                justify-content: flex-start;
+                top: -38px;
+            }
+            @media (max-width: 520px) and (max-height: 879px) {
+                body.studio-ready .app-container { top: -18px; }
+            }
+            @media (max-width: 520px) and (max-height: 760px) {
+                body.studio-ready .app-container { top: -16px; }
             }
 
             .subtitle { margin-bottom: 0.65rem; }
@@ -1580,6 +1594,8 @@ function setStage(n) {
     controls.classList.toggle('ready', n >= 2);
     panel.classList.toggle('active', n >= 2);
     vizContainer.style.display = n >= 2 ? 'block' : 'none';
+    /* мобильная раскладка различает стартовый экран и рабочий */
+    document.body.classList.toggle('studio-ready', n >= 2);
 }
 
 async function handleFile(file) {
