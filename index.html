@@ -1014,28 +1014,40 @@
         }
 
         /* ============ ТЕЛЕФОНЫ ============
-           Подпись вплотную к короне и нижняя строка в два ряда.
-           Больше ничего не меняем. */
+           Только телефон: слоган ближе к панели, дорожка перемотки компактнее,
+           а окно гониометра — на всю ширину и на всё свободное место по высоте.
+           Десктопные правила выше не меняются. */
         @media (max-width: 520px) {
-            /* зазор до окна ниже — тот же, что на десктопе, только в масштабе экрана */
-            .subtitle { margin-bottom: 1.9rem; }
+            .subtitle { margin-bottom: 1rem; }
             .grat-brand { margin-bottom: 1.9rem; }
 
             /* мельче, чтобы «WAV» осталось во второй строке, а не ушло в третью */
             footer { font-size: 0.6rem; letter-spacing: 0.2px; padding: 0.8rem 0.85rem 0.55rem; }
+
+            /* CORR — узкая колонка у правого края, поле занимает остаток ширины.
+               flex: 1 1 0 (а не auto!): иначе на низких экранах поле сжимается
+               по содержимому и полоса CORR уезжает к центру. */
+            .meters { gap: 0.55rem; min-height: 0; }
+            .scope-wrap { flex: 1 1 0; min-width: 0; height: auto; min-height: 96px; }
+            .corr-wrap { flex: 0 0 40px; }
+            .corr-bar { height: 72px; }
+
+            /* высоту экономим на кнопках и дорожке — отдаём её визуализации */
+            .controls { margin-top: 0.7rem; }
+            .visualizer-container { margin-top: 0.5rem; height: 54px; }
+            .status-text { margin-top: 0.2rem; }
         }
 
-        /* на телефоне гониометр тоже растёт, но только если реально есть место */
+        /* на телефоне гониометр растёт на всё свободное место, но не выталкивает
+           дорожку и подпись за экран */
         @media (max-width: 520px) and (min-height: 820px) {
-            .panel.active { max-height: calc(100dvh - 469px); }
+            .panel.active { max-height: calc(100dvh - 410px); }
         }
         @media (max-width: 520px) and (min-height: 761px) and (max-height: 819px) {
-            .panel.active { max-height: calc(100dvh - 450px); }
+            .panel.active { max-height: calc(100dvh - 392px); }
         }
-        /* низкие телефоны: места нет — гониометр остаётся исходной высоты */
         @media (max-width: 520px) and (max-height: 760px) {
-            .panel.active { flex: 0 0 auto; }
-            .scope-wrap { flex: 0 0 auto; height: 72px; min-height: 72px; }
+            .panel.active { flex: 1 1 auto; max-height: calc(100dvh - 382px); }
         }
 
         /* совсем узкие телефоны (320 px): ещё на шаг мельче */
